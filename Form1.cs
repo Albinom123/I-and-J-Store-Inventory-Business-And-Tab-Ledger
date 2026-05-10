@@ -1,40 +1,63 @@
+using MaterialSkin;
+using MaterialSkin.Controls;
+using I_and_J_Store_Inventory__Business_And_Tab_Ledger.Forms;
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 {
-    public partial class Form1 : Form
+    public partial class Form1 : MaterialForm
     {
-        bool sidebarExpand;
+        bool sidebarExpand = false;
+
         public Form1()
         {
             InitializeComponent();
+
+            // Setup the MaterialSkinManager
+            var msm = MaterialSkinManager.Instance;
+            msm.AddFormToManage(this);
+            msm.Theme = MaterialSkinManager.Themes.LIGHT;
+
+            // Define your Gold ColorScheme
+            msm.ColorScheme = new ColorScheme(
+                Color.FromArgb(184, 134, 11), // Primary: Dark Goldenrod
+                Color.FromArgb(153, 101, 21), // Primary Dark: Golden Brown
+                Color.FromArgb(218, 165, 32), // Primary Light: Goldenrod
+                Color.FromArgb(255, 215, 0),  // Accent: Pure Gold
+                TextShade.WHITE               // White text for readability
+            );
+
+            // Force the rendering to be consistent
+            labelSL.UseCompatibleTextRendering = true;
+
+            // Re-assert the specific font and weight
+           
+            labelSL.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
+            labelSL.ForeColor = Color.FromArgb(153, 101, 21);
+         
+            labelInv.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
+            labelInv.ForeColor = Color.FromArgb(153, 101, 21);
+
+
+
         }
 
-        private void SideBarTimer_Tick(object sender, EventArgs e)
+        private void loadForm(Form contentForm)
         {
-            if (sidebarExpand)
-            {
-                SideBarContainer.Width -= 10;
-                if (SideBarContainer.Width == SideBarContainer.MinimumSize.Width)
-                {
-                    sidebarExpand = false;
-                    SideBarTimer.Stop();
-                }
+            if (this.MainInvPanel.Controls.Count > 0)
+                this.MainInvPanel.Controls.RemoveAt(0);
 
-            }
-            else
-            {
-                SideBarContainer.Width += 10;
-                if (SideBarContainer.Width == SideBarContainer.MaximumSize.Width)
-                {
-                    sidebarExpand = true;
-                    SideBarTimer.Stop();
-                }
-            }
+            contentForm.TopLevel = false;
+            contentForm.FormBorderStyle = FormBorderStyle.None;
+            contentForm.Dock = DockStyle.Fill;
 
-        }
+            this.MainInvPanel.Controls.Add(contentForm);
+            this.MainInvPanel.Tag = contentForm;
+            contentForm.Show();
 
-        private void MenuButton_Click(object sender, EventArgs e)
-        {
-            SideBarTimer.Start();
+            // Re-apply colors if the controls are part of the main form being refreshed
+         
         }
     }
 }
