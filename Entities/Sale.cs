@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger.Forms
+namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger.Entities
 {
-    internal class SalesLedgerForm
+    internal class Sale
     {
     }
 }

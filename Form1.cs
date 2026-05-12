@@ -1,6 +1,5 @@
 using MaterialSkin;
 using MaterialSkin.Controls;
-using I_and_J_Store_Inventory__Business_And_Tab_Ledger.Forms;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -32,14 +31,15 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             labelSL.UseCompatibleTextRendering = true;
 
             // Re-assert the specific font and weight
-           
+
             labelSL.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
             labelSL.ForeColor = Color.FromArgb(153, 101, 21);
-         
+
             labelInv.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
             labelInv.ForeColor = Color.FromArgb(153, 101, 21);
 
-
+            labelTL.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
+            labelTL.ForeColor = Color.FromArgb(153, 101, 21);
 
         }
 
@@ -57,7 +57,24 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             contentForm.Show();
 
             // Re-apply colors if the controls are part of the main form being refreshed
-         
+
+        }
+
+        private void BtnVCDL_Click(object sender, EventArgs e)
+        {
+            // 1. Create the floating "Ghost" frame
+            FloatingHostForm ghostFrame = new FloatingHostForm();
+
+            // 2. Create your debt list content
+            UserControlDebtList debtContent = new UserControlDebtList();
+            debtContent.Dock = DockStyle.Fill;
+
+            // 3. Put the content inside the frame
+            ghostFrame.Controls.Add(debtContent);
+
+            // 4. Pop it up!
+            // ShowDialog makes it float on top and stay there until closed
+            ghostFrame.ShowDialog();
         }
     }
 }
