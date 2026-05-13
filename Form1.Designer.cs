@@ -32,44 +32,46 @@
             panel7 = new Panel();
             tabPage4 = new TabPage();
             panel17 = new Panel();
-            dataGridView3 = new DataGridView();
-            Column2 = new DataGridViewTextBoxColumn();
-            Column3 = new DataGridViewTextBoxColumn();
-            Column4 = new DataGridViewTextBoxColumn();
-            Column5 = new DataGridViewTextBoxColumn();
+            dgvTabLedger = new DataGridView();
             panel16 = new Panel();
             BtnVCDL = new Button();
             materialCard3 = new MaterialSkin.Controls.MaterialCard();
             label2 = new Label();
-            textBox3 = new TextBox();
-            button7 = new Button();
-            button9 = new Button();
-            button8 = new Button();
+            txtTabCustomerName = new TextBox();
+            btnTabAddCustomer = new Button();
+            btnTabEditCustomer = new Button();
+            btnTabDeleteCustomer = new Button();
             panel18 = new Panel();
-            button6 = new Button();
-            comboBox4 = new ComboBox();
-            textBox4 = new TextBox();
+            btnTabSearch = new Button();
+            cmbTabFilterStatus = new ComboBox();
+            txtTabSearchName = new TextBox();
             materialCard4 = new MaterialSkin.Controls.MaterialCard();
             labelTL = new Label();
             panel10 = new Panel();
             panel6 = new Panel();
             tabPage3 = new TabPage();
+            panel20 = new Panel();
+            materialCard6 = new MaterialSkin.Controls.MaterialCard();
+            label7 = new Label();
+            cmbSlCategory = new ComboBox();
+            label8 = new Label();
+            txtSlItemPrice = new TextBox();
+            label9 = new Label();
+            txtSlItemName = new TextBox();
+            btnSlAddItem = new Button();
+            btnSlEditItem = new Button();
+            btnSlDeleteItem = new Button();
             panel14 = new Panel();
-            dataGridView2 = new DataGridView();
-            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            Column1 = new DataGridViewTextBoxColumn();
-            dataGridViewComboBoxColumn1 = new DataGridViewComboBoxColumn();
-            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
+            dgvSalesLedger = new DataGridView();
             panel13 = new Panel();
-            materialCard2 = new MaterialSkin.Controls.MaterialCard();
+            dtpSlFilterDate = new MaterialSkin.Controls.MaterialCard();
             labelSL = new Label();
             dateTimePicker1 = new DateTimePicker();
-            button5 = new Button();
-            button1 = new Button();
-            textBox1 = new TextBox();
-            comboBox2 = new ComboBox();
-            button4 = new Button();
+            btnSlShowDate = new Button();
+            btnSlSearch = new Button();
+            txtSlSearch = new TextBox();
+            cmbSlFilterCategory = new ComboBox();
+            btnSlFilterApply = new Button();
             panel11 = new Panel();
             panel5 = new Panel();
             tabPage2 = new TabPage();
@@ -77,29 +79,29 @@
             panel19 = new Panel();
             materialCard5 = new MaterialSkin.Controls.MaterialCard();
             label5 = new Label();
-            textBox7 = new TextBox();
+            txtInvItemStocks = new TextBox();
             label4 = new Label();
-            comboBox3 = new ComboBox();
+            cmbInvCategory = new ComboBox();
             label3 = new Label();
-            textBox6 = new TextBox();
+            txtInvItemPrice = new TextBox();
             label1 = new Label();
-            textBox5 = new TextBox();
-            button11 = new Button();
-            button12 = new Button();
-            button13 = new Button();
+            txtInvItemName = new TextBox();
+            btnInvAddItem = new Button();
+            btnInvEditItem = new Button();
+            btnInvDeleteItem = new Button();
             panel4 = new Panel();
-            dataGridView1 = new DataGridView();
-            ColItemName = new DataGridViewTextBoxColumn();
-            ColCategory = new DataGridViewComboBoxColumn();
-            ColPrices = new DataGridViewTextBoxColumn();
-            ColStocks = new DataGridViewTextBoxColumn();
+            dgvInventory = new DataGridView();
+            colInvName = new DataGridViewTextBoxColumn();
+            colInvCategory = new DataGridViewTextBoxColumn();
+            colInvPrice = new DataGridViewTextBoxColumn();
+            colInvStocks = new DataGridViewTextBoxColumn();
             panel3 = new Panel();
             materialCard1 = new MaterialSkin.Controls.MaterialCard();
             labelInv = new Label();
-            button3 = new Button();
-            textBox2 = new TextBox();
-            comboBox1 = new ComboBox();
-            button2 = new Button();
+            btnInvSearch = new Button();
+            txtInvSearch = new TextBox();
+            cmbInvFilterCategory = new ComboBox();
+            btnInvFilterApply = new Button();
             panel2 = new Panel();
             panel1 = new Panel();
             tabPage1 = new TabPage();
@@ -107,42 +109,40 @@
             panel12 = new Panel();
             panel8 = new Panel();
             materialTabControl1 = new MaterialSkin.Controls.MaterialTabControl();
-            panel20 = new Panel();
-            materialCard6 = new MaterialSkin.Controls.MaterialCard();
-            label7 = new Label();
-            comboBox5 = new ComboBox();
-            label8 = new Label();
-            textBox9 = new TextBox();
-            label9 = new Label();
-            textBox10 = new TextBox();
-            button10 = new Button();
-            button14 = new Button();
-            button15 = new Button();
+            colSLName = new DataGridViewTextBoxColumn();
+            colSLItemsold = new DataGridViewTextBoxColumn();
+            colSLCategory = new DataGridViewTextBoxColumn();
+            colSlPrice = new DataGridViewTextBoxColumn();
+            colSLDateTime = new DataGridViewTextBoxColumn();
+            colTabName = new DataGridViewTextBoxColumn();
+            colTabBalance = new DataGridViewTextBoxColumn();
+            colTabStatus = new DataGridViewTextBoxColumn();
+            colTabDate = new DataGridViewTextBoxColumn();
             tabPage5.SuspendLayout();
             tabPage4.SuspendLayout();
             panel17.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTabLedger).BeginInit();
             panel16.SuspendLayout();
             materialCard3.SuspendLayout();
             panel18.SuspendLayout();
             materialCard4.SuspendLayout();
             tabPage3.SuspendLayout();
+            panel20.SuspendLayout();
+            materialCard6.SuspendLayout();
             panel14.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvSalesLedger).BeginInit();
             panel13.SuspendLayout();
-            materialCard2.SuspendLayout();
+            dtpSlFilterDate.SuspendLayout();
             tabPage2.SuspendLayout();
             MainInvPanel.SuspendLayout();
             panel19.SuspendLayout();
             materialCard5.SuspendLayout();
             panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvInventory).BeginInit();
             panel3.SuspendLayout();
             materialCard1.SuspendLayout();
             tabPage1.SuspendLayout();
             materialTabControl1.SuspendLayout();
-            panel20.SuspendLayout();
-            materialCard6.SuspendLayout();
             SuspendLayout();
             // 
             // imageList1
@@ -205,64 +205,36 @@
             // 
             // panel17
             // 
-            panel17.Controls.Add(dataGridView3);
+            panel17.Controls.Add(dgvTabLedger);
             panel17.Dock = DockStyle.Fill;
             panel17.Location = new Point(341, 124);
             panel17.Name = "panel17";
             panel17.Size = new Size(959, 573);
             panel17.TabIndex = 17;
             // 
-            // dataGridView3
+            // dgvTabLedger
             // 
-            dataGridView3.AllowUserToOrderColumns = true;
-            dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView3.BackgroundColor = SystemColors.ControlLightLight;
-            dataGridView3.BorderStyle = BorderStyle.Fixed3D;
-            dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView3.Columns.AddRange(new DataGridViewColumn[] { Column2, Column3, Column4, Column5 });
-            dataGridView3.Dock = DockStyle.Fill;
-            dataGridView3.GridColor = SystemColors.MenuText;
-            dataGridView3.Location = new Point(0, 0);
-            dataGridView3.Name = "dataGridView3";
-            dataGridView3.RowHeadersWidth = 51;
-            dataGridView3.Size = new Size(959, 573);
-            dataGridView3.TabIndex = 0;
-            // 
-            // Column2
-            // 
-            Column2.FillWeight = 94.23874F;
-            Column2.HeaderText = "Costumer Name";
-            Column2.MinimumWidth = 6;
-            Column2.Name = "Column2";
-            // 
-            // Column3
-            // 
-            Column3.FillWeight = 101.558464F;
-            Column3.HeaderText = "Active Balance";
-            Column3.MinimumWidth = 6;
-            Column3.Name = "Column3";
-            // 
-            // Column4
-            // 
-            Column4.FillWeight = 104.423553F;
-            Column4.HeaderText = "Debt Status";
-            Column4.MinimumWidth = 6;
-            Column4.Name = "Column4";
-            // 
-            // Column5
-            // 
-            Column5.FillWeight = 99.77925F;
-            Column5.HeaderText = "Begin Date and Time ";
-            Column5.MinimumWidth = 6;
-            Column5.Name = "Column5";
+            dgvTabLedger.AllowUserToOrderColumns = true;
+            dgvTabLedger.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvTabLedger.BackgroundColor = SystemColors.ControlLightLight;
+            dgvTabLedger.BorderStyle = BorderStyle.Fixed3D;
+            dgvTabLedger.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvTabLedger.Columns.AddRange(new DataGridViewColumn[] { colTabName, colTabBalance, colTabStatus, colTabDate });
+            dgvTabLedger.Dock = DockStyle.Fill;
+            dgvTabLedger.GridColor = SystemColors.MenuText;
+            dgvTabLedger.Location = new Point(0, 0);
+            dgvTabLedger.Name = "dgvTabLedger";
+            dgvTabLedger.RowHeadersWidth = 51;
+            dgvTabLedger.Size = new Size(959, 573);
+            dgvTabLedger.TabIndex = 0;
             // 
             // panel16
             // 
             panel16.BorderStyle = BorderStyle.Fixed3D;
             panel16.Controls.Add(BtnVCDL);
             panel16.Controls.Add(materialCard3);
-            panel16.Controls.Add(button9);
-            panel16.Controls.Add(button8);
+            panel16.Controls.Add(btnTabEditCustomer);
+            panel16.Controls.Add(btnTabDeleteCustomer);
             panel16.Dock = DockStyle.Left;
             panel16.Location = new Point(85, 124);
             panel16.Name = "panel16";
@@ -284,8 +256,8 @@
             materialCard3.BackColor = Color.FromArgb(255, 255, 255);
             materialCard3.BorderStyle = BorderStyle.Fixed3D;
             materialCard3.Controls.Add(label2);
-            materialCard3.Controls.Add(textBox3);
-            materialCard3.Controls.Add(button7);
+            materialCard3.Controls.Add(txtTabCustomerName);
+            materialCard3.Controls.Add(btnTabAddCustomer);
             materialCard3.Depth = 0;
             materialCard3.Dock = DockStyle.Top;
             materialCard3.ForeColor = Color.FromArgb(222, 0, 0, 0);
@@ -306,45 +278,45 @@
             label2.TabIndex = 2;
             label2.Text = "Register Customer's Name";
             // 
-            // textBox3
+            // txtTabCustomerName
             // 
-            textBox3.Location = new Point(17, 46);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(208, 27);
-            textBox3.TabIndex = 0;
+            txtTabCustomerName.Location = new Point(17, 46);
+            txtTabCustomerName.Name = "txtTabCustomerName";
+            txtTabCustomerName.Size = new Size(208, 27);
+            txtTabCustomerName.TabIndex = 0;
             // 
-            // button7
+            // btnTabAddCustomer
             // 
-            button7.Location = new Point(17, 93);
-            button7.Name = "button7";
-            button7.Size = new Size(94, 29);
-            button7.TabIndex = 1;
-            button7.Text = "Add +";
-            button7.UseVisualStyleBackColor = true;
+            btnTabAddCustomer.Location = new Point(17, 93);
+            btnTabAddCustomer.Name = "btnTabAddCustomer";
+            btnTabAddCustomer.Size = new Size(94, 29);
+            btnTabAddCustomer.TabIndex = 1;
+            btnTabAddCustomer.Text = "Add +";
+            btnTabAddCustomer.UseVisualStyleBackColor = true;
             // 
-            // button9
+            // btnTabEditCustomer
             // 
-            button9.Location = new Point(17, 234);
-            button9.Name = "button9";
-            button9.Size = new Size(208, 29);
-            button9.TabIndex = 4;
-            button9.Text = "Edit Customer Info";
-            button9.UseVisualStyleBackColor = true;
+            btnTabEditCustomer.Location = new Point(17, 234);
+            btnTabEditCustomer.Name = "btnTabEditCustomer";
+            btnTabEditCustomer.Size = new Size(208, 29);
+            btnTabEditCustomer.TabIndex = 4;
+            btnTabEditCustomer.Text = "Edit Customer Info";
+            btnTabEditCustomer.UseVisualStyleBackColor = true;
             // 
-            // button8
+            // btnTabDeleteCustomer
             // 
-            button8.Location = new Point(17, 183);
-            button8.Name = "button8";
-            button8.Size = new Size(208, 29);
-            button8.TabIndex = 3;
-            button8.Text = "Delete Customer Info";
-            button8.UseVisualStyleBackColor = true;
+            btnTabDeleteCustomer.Location = new Point(17, 183);
+            btnTabDeleteCustomer.Name = "btnTabDeleteCustomer";
+            btnTabDeleteCustomer.Size = new Size(208, 29);
+            btnTabDeleteCustomer.TabIndex = 3;
+            btnTabDeleteCustomer.Text = "Delete Customer Info";
+            btnTabDeleteCustomer.UseVisualStyleBackColor = true;
             // 
             // panel18
             // 
-            panel18.Controls.Add(button6);
-            panel18.Controls.Add(comboBox4);
-            panel18.Controls.Add(textBox4);
+            panel18.Controls.Add(btnTabSearch);
+            panel18.Controls.Add(cmbTabFilterStatus);
+            panel18.Controls.Add(txtTabSearchName);
             panel18.Controls.Add(materialCard4);
             panel18.Dock = DockStyle.Top;
             panel18.Location = new Point(85, 3);
@@ -352,32 +324,32 @@
             panel18.Size = new Size(1215, 121);
             panel18.TabIndex = 15;
             // 
-            // button6
+            // btnTabSearch
             // 
-            button6.Location = new Point(547, 80);
-            button6.Name = "button6";
-            button6.Size = new Size(94, 29);
-            button6.TabIndex = 18;
-            button6.Text = "Search";
-            button6.UseVisualStyleBackColor = true;
+            btnTabSearch.Location = new Point(547, 80);
+            btnTabSearch.Name = "btnTabSearch";
+            btnTabSearch.Size = new Size(94, 29);
+            btnTabSearch.TabIndex = 18;
+            btnTabSearch.Text = "Search";
+            btnTabSearch.UseVisualStyleBackColor = true;
             // 
-            // comboBox4
+            // cmbTabFilterStatus
             // 
-            comboBox4.FormattingEnabled = true;
-            comboBox4.Items.AddRange(new object[] { "All", "Active", "Settled" });
-            comboBox4.Location = new Point(751, 80);
-            comboBox4.Name = "comboBox4";
-            comboBox4.Size = new Size(234, 28);
-            comboBox4.TabIndex = 17;
-            comboBox4.Text = "Filter by Status:";
+            cmbTabFilterStatus.FormattingEnabled = true;
+            cmbTabFilterStatus.Items.AddRange(new object[] { "All", "Active", "Settled" });
+            cmbTabFilterStatus.Location = new Point(751, 80);
+            cmbTabFilterStatus.Name = "cmbTabFilterStatus";
+            cmbTabFilterStatus.Size = new Size(234, 28);
+            cmbTabFilterStatus.TabIndex = 17;
+            cmbTabFilterStatus.Text = "Filter by Status:";
             // 
-            // textBox4
+            // txtTabSearchName
             // 
-            textBox4.Location = new Point(309, 81);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(214, 27);
-            textBox4.TabIndex = 15;
-            textBox4.Text = "Search Costumer Name:";
+            txtTabSearchName.Location = new Point(309, 81);
+            txtTabSearchName.Name = "txtTabSearchName";
+            txtTabSearchName.Size = new Size(214, 27);
+            txtTabSearchName.TabIndex = 15;
+            txtTabSearchName.Text = "Search Costumer Name:";
             // 
             // materialCard4
             // 
@@ -440,98 +412,173 @@
             tabPage3.Text = "Sales Ledger";
             tabPage3.UseVisualStyleBackColor = true;
             // 
+            // panel20
+            // 
+            panel20.BorderStyle = BorderStyle.Fixed3D;
+            panel20.Controls.Add(materialCard6);
+            panel20.Controls.Add(btnSlEditItem);
+            panel20.Controls.Add(btnSlDeleteItem);
+            panel20.Dock = DockStyle.Left;
+            panel20.Location = new Point(85, 128);
+            panel20.Name = "panel20";
+            panel20.Size = new Size(242, 569);
+            panel20.TabIndex = 18;
+            // 
+            // materialCard6
+            // 
+            materialCard6.BackColor = Color.FromArgb(255, 255, 255);
+            materialCard6.BorderStyle = BorderStyle.Fixed3D;
+            materialCard6.Controls.Add(label7);
+            materialCard6.Controls.Add(cmbSlCategory);
+            materialCard6.Controls.Add(label8);
+            materialCard6.Controls.Add(txtSlItemPrice);
+            materialCard6.Controls.Add(label9);
+            materialCard6.Controls.Add(txtSlItemName);
+            materialCard6.Controls.Add(btnSlAddItem);
+            materialCard6.Depth = 0;
+            materialCard6.Dock = DockStyle.Top;
+            materialCard6.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            materialCard6.Location = new Point(0, 0);
+            materialCard6.Margin = new Padding(14);
+            materialCard6.MouseState = MaterialSkin.MouseState.HOVER;
+            materialCard6.Name = "materialCard6";
+            materialCard6.Padding = new Padding(14);
+            materialCard6.Size = new Size(238, 385);
+            materialCard6.TabIndex = 5;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(15, 87);
+            label7.Name = "label7";
+            label7.Size = new Size(69, 20);
+            label7.TabIndex = 6;
+            label7.Text = "Category";
+            // 
+            // cmbSlCategory
+            // 
+            cmbSlCategory.FormattingEnabled = true;
+            cmbSlCategory.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
+            cmbSlCategory.Location = new Point(17, 110);
+            cmbSlCategory.Name = "cmbSlCategory";
+            cmbSlCategory.Size = new Size(208, 28);
+            cmbSlCategory.TabIndex = 5;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(17, 151);
+            label8.Name = "label8";
+            label8.Size = new Size(75, 20);
+            label8.TabIndex = 4;
+            label8.Text = "Item Price";
+            // 
+            // txtSlItemPrice
+            // 
+            txtSlItemPrice.Location = new Point(17, 174);
+            txtSlItemPrice.Name = "txtSlItemPrice";
+            txtSlItemPrice.Size = new Size(208, 27);
+            txtSlItemPrice.TabIndex = 3;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(15, 23);
+            label9.Name = "label9";
+            label9.Size = new Size(83, 20);
+            label9.TabIndex = 2;
+            label9.Text = "Item Name";
+            // 
+            // txtSlItemName
+            // 
+            txtSlItemName.Location = new Point(17, 46);
+            txtSlItemName.Name = "txtSlItemName";
+            txtSlItemName.Size = new Size(208, 27);
+            txtSlItemName.TabIndex = 0;
+            // 
+            // btnSlAddItem
+            // 
+            btnSlAddItem.Location = new Point(15, 335);
+            btnSlAddItem.Name = "btnSlAddItem";
+            btnSlAddItem.Size = new Size(94, 29);
+            btnSlAddItem.TabIndex = 1;
+            btnSlAddItem.Text = "Add +";
+            btnSlAddItem.UseVisualStyleBackColor = true;
+            // 
+            // btnSlEditItem
+            // 
+            btnSlEditItem.Location = new Point(17, 453);
+            btnSlEditItem.Name = "btnSlEditItem";
+            btnSlEditItem.Size = new Size(208, 29);
+            btnSlEditItem.TabIndex = 4;
+            btnSlEditItem.Text = "Edit Item";
+            btnSlEditItem.UseVisualStyleBackColor = true;
+            // 
+            // btnSlDeleteItem
+            // 
+            btnSlDeleteItem.Location = new Point(17, 418);
+            btnSlDeleteItem.Name = "btnSlDeleteItem";
+            btnSlDeleteItem.Size = new Size(208, 29);
+            btnSlDeleteItem.TabIndex = 3;
+            btnSlDeleteItem.Text = "Delete Item ";
+            btnSlDeleteItem.UseVisualStyleBackColor = true;
+            // 
             // panel14
             // 
-            panel14.Controls.Add(dataGridView2);
+            panel14.Controls.Add(dgvSalesLedger);
             panel14.Dock = DockStyle.Right;
             panel14.Location = new Point(333, 128);
             panel14.Name = "panel14";
             panel14.Size = new Size(967, 569);
             panel14.TabIndex = 15;
             // 
-            // dataGridView2
+            // dgvSalesLedger
             // 
-            dataGridView2.AllowUserToOrderColumns = true;
-            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView2.BackgroundColor = SystemColors.ButtonFace;
-            dataGridView2.BorderStyle = BorderStyle.Fixed3D;
-            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, Column1, dataGridViewComboBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3 });
-            dataGridView2.Dock = DockStyle.Fill;
-            dataGridView2.GridColor = SystemColors.InactiveCaptionText;
-            dataGridView2.Location = new Point(0, 0);
-            dataGridView2.Name = "dataGridView2";
-            dataGridView2.RowHeadersWidth = 51;
-            dataGridView2.Size = new Size(967, 569);
-            dataGridView2.TabIndex = 11;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            dataGridViewCellStyle3.Format = "₱ #,##0.00";
-            dataGridViewCellStyle3.NullValue = null;
-            dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle3;
-            dataGridViewTextBoxColumn1.HeaderText = "Item Name ";
-            dataGridViewTextBoxColumn1.MinimumWidth = 6;
-            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
-            // Column1
-            // 
-            Column1.HeaderText = "Item Sold";
-            Column1.MinimumWidth = 6;
-            Column1.Name = "Column1";
-            // 
-            // dataGridViewComboBoxColumn1
-            // 
-            dataGridViewComboBoxColumn1.HeaderText = "Category";
-            dataGridViewComboBoxColumn1.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
-            dataGridViewComboBoxColumn1.MinimumWidth = 6;
-            dataGridViewComboBoxColumn1.Name = "dataGridViewComboBoxColumn1";
-            dataGridViewComboBoxColumn1.Resizable = DataGridViewTriState.True;
-            dataGridViewComboBoxColumn1.SortMode = DataGridViewColumnSortMode.Automatic;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            dataGridViewTextBoxColumn2.HeaderText = "Total Amount (₱)";
-            dataGridViewTextBoxColumn2.MinimumWidth = 6;
-            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            dataGridViewTextBoxColumn3.HeaderText = "Time And Date:";
-            dataGridViewTextBoxColumn3.MinimumWidth = 6;
-            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            dgvSalesLedger.AllowUserToOrderColumns = true;
+            dgvSalesLedger.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvSalesLedger.BackgroundColor = SystemColors.ButtonFace;
+            dgvSalesLedger.BorderStyle = BorderStyle.Fixed3D;
+            dgvSalesLedger.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvSalesLedger.Columns.AddRange(new DataGridViewColumn[] { colSLName, colSLItemsold, colSLCategory, colSlPrice, colSLDateTime });
+            dgvSalesLedger.Dock = DockStyle.Fill;
+            dgvSalesLedger.GridColor = SystemColors.InactiveCaptionText;
+            dgvSalesLedger.Location = new Point(0, 0);
+            dgvSalesLedger.Name = "dgvSalesLedger";
+            dgvSalesLedger.RowHeadersWidth = 51;
+            dgvSalesLedger.Size = new Size(967, 569);
+            dgvSalesLedger.TabIndex = 11;
             // 
             // panel13
             // 
             panel13.BackColor = Color.White;
-            panel13.Controls.Add(materialCard2);
+            panel13.Controls.Add(dtpSlFilterDate);
             panel13.Dock = DockStyle.Top;
             panel13.Location = new Point(85, 3);
             panel13.Name = "panel13";
             panel13.Size = new Size(1215, 125);
             panel13.TabIndex = 14;
             // 
-            // materialCard2
+            // dtpSlFilterDate
             // 
-            materialCard2.BackColor = Color.FromArgb(255, 255, 255);
-            materialCard2.BorderStyle = BorderStyle.Fixed3D;
-            materialCard2.Controls.Add(labelSL);
-            materialCard2.Controls.Add(dateTimePicker1);
-            materialCard2.Controls.Add(button5);
-            materialCard2.Controls.Add(button1);
-            materialCard2.Controls.Add(textBox1);
-            materialCard2.Controls.Add(comboBox2);
-            materialCard2.Controls.Add(button4);
-            materialCard2.Depth = 0;
-            materialCard2.Dock = DockStyle.Fill;
-            materialCard2.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard2.Location = new Point(0, 0);
-            materialCard2.Margin = new Padding(14);
-            materialCard2.MouseState = MaterialSkin.MouseState.HOVER;
-            materialCard2.Name = "materialCard2";
-            materialCard2.Padding = new Padding(14);
-            materialCard2.Size = new Size(1215, 125);
-            materialCard2.TabIndex = 10;
+            dtpSlFilterDate.BackColor = Color.FromArgb(255, 255, 255);
+            dtpSlFilterDate.BorderStyle = BorderStyle.Fixed3D;
+            dtpSlFilterDate.Controls.Add(labelSL);
+            dtpSlFilterDate.Controls.Add(dateTimePicker1);
+            dtpSlFilterDate.Controls.Add(btnSlShowDate);
+            dtpSlFilterDate.Controls.Add(btnSlSearch);
+            dtpSlFilterDate.Controls.Add(txtSlSearch);
+            dtpSlFilterDate.Controls.Add(cmbSlFilterCategory);
+            dtpSlFilterDate.Controls.Add(btnSlFilterApply);
+            dtpSlFilterDate.Depth = 0;
+            dtpSlFilterDate.Dock = DockStyle.Fill;
+            dtpSlFilterDate.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            dtpSlFilterDate.Location = new Point(0, 0);
+            dtpSlFilterDate.Margin = new Padding(14);
+            dtpSlFilterDate.MouseState = MaterialSkin.MouseState.HOVER;
+            dtpSlFilterDate.Name = "dtpSlFilterDate";
+            dtpSlFilterDate.Padding = new Padding(14);
+            dtpSlFilterDate.Size = new Size(1215, 125);
+            dtpSlFilterDate.TabIndex = 10;
             // 
             // labelSL
             // 
@@ -551,53 +598,53 @@
             dateTimePicker1.Size = new Size(266, 27);
             dateTimePicker1.TabIndex = 12;
             // 
-            // button5
+            // btnSlShowDate
             // 
-            button5.BackColor = SystemColors.ButtonFace;
-            button5.Location = new Point(17, 84);
-            button5.Name = "button5";
-            button5.Size = new Size(165, 29);
-            button5.TabIndex = 11;
-            button5.Text = "Show Specific Date:";
-            button5.UseVisualStyleBackColor = false;
+            btnSlShowDate.BackColor = SystemColors.ButtonFace;
+            btnSlShowDate.Location = new Point(17, 84);
+            btnSlShowDate.Name = "btnSlShowDate";
+            btnSlShowDate.Size = new Size(165, 29);
+            btnSlShowDate.TabIndex = 11;
+            btnSlShowDate.Text = "Show Specific Date:";
+            btnSlShowDate.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // btnSlSearch
             // 
-            button1.BackColor = SystemColors.ButtonHighlight;
-            button1.Location = new Point(1073, 37);
-            button1.Name = "button1";
-            button1.Size = new Size(113, 29);
-            button1.TabIndex = 9;
-            button1.Text = "Search";
-            button1.UseVisualStyleBackColor = false;
+            btnSlSearch.BackColor = SystemColors.ButtonHighlight;
+            btnSlSearch.Location = new Point(1073, 37);
+            btnSlSearch.Name = "btnSlSearch";
+            btnSlSearch.Size = new Size(113, 29);
+            btnSlSearch.TabIndex = 9;
+            btnSlSearch.Text = "Search";
+            btnSlSearch.UseVisualStyleBackColor = false;
             // 
-            // textBox1
+            // txtSlSearch
             // 
-            textBox1.Location = new Point(782, 39);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(285, 27);
-            textBox1.TabIndex = 8;
-            textBox1.Text = "Enter item name...";
+            txtSlSearch.Location = new Point(782, 39);
+            txtSlSearch.Name = "txtSlSearch";
+            txtSlSearch.Size = new Size(285, 27);
+            txtSlSearch.TabIndex = 8;
+            txtSlSearch.Text = "Enter item name...";
             // 
-            // comboBox2
+            // cmbSlFilterCategory
             // 
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
-            comboBox2.Location = new Point(782, 84);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(285, 28);
-            comboBox2.TabIndex = 4;
-            comboBox2.Text = "Categories";
+            cmbSlFilterCategory.FormattingEnabled = true;
+            cmbSlFilterCategory.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
+            cmbSlFilterCategory.Location = new Point(782, 84);
+            cmbSlFilterCategory.Name = "cmbSlFilterCategory";
+            cmbSlFilterCategory.Size = new Size(285, 28);
+            cmbSlFilterCategory.TabIndex = 4;
+            cmbSlFilterCategory.Text = "Categories";
             // 
-            // button4
+            // btnSlFilterApply
             // 
-            button4.BackColor = SystemColors.ButtonFace;
-            button4.Location = new Point(1073, 83);
-            button4.Name = "button4";
-            button4.Size = new Size(113, 29);
-            button4.TabIndex = 2;
-            button4.Text = "Show Only";
-            button4.UseVisualStyleBackColor = false;
+            btnSlFilterApply.BackColor = SystemColors.ButtonFace;
+            btnSlFilterApply.Location = new Point(1073, 83);
+            btnSlFilterApply.Name = "btnSlFilterApply";
+            btnSlFilterApply.Size = new Size(113, 29);
+            btnSlFilterApply.TabIndex = 2;
+            btnSlFilterApply.Text = "Show Only";
+            btnSlFilterApply.UseVisualStyleBackColor = false;
             // 
             // panel11
             // 
@@ -646,8 +693,8 @@
             // 
             panel19.BorderStyle = BorderStyle.Fixed3D;
             panel19.Controls.Add(materialCard5);
-            panel19.Controls.Add(button12);
-            panel19.Controls.Add(button13);
+            panel19.Controls.Add(btnInvEditItem);
+            panel19.Controls.Add(btnInvDeleteItem);
             panel19.Dock = DockStyle.Left;
             panel19.Location = new Point(82, 125);
             panel19.Name = "panel19";
@@ -659,14 +706,14 @@
             materialCard5.BackColor = Color.FromArgb(255, 255, 255);
             materialCard5.BorderStyle = BorderStyle.Fixed3D;
             materialCard5.Controls.Add(label5);
-            materialCard5.Controls.Add(textBox7);
+            materialCard5.Controls.Add(txtInvItemStocks);
             materialCard5.Controls.Add(label4);
-            materialCard5.Controls.Add(comboBox3);
+            materialCard5.Controls.Add(cmbInvCategory);
             materialCard5.Controls.Add(label3);
-            materialCard5.Controls.Add(textBox6);
+            materialCard5.Controls.Add(txtInvItemPrice);
             materialCard5.Controls.Add(label1);
-            materialCard5.Controls.Add(textBox5);
-            materialCard5.Controls.Add(button11);
+            materialCard5.Controls.Add(txtInvItemName);
+            materialCard5.Controls.Add(btnInvAddItem);
             materialCard5.Depth = 0;
             materialCard5.Dock = DockStyle.Top;
             materialCard5.ForeColor = Color.FromArgb(222, 0, 0, 0);
@@ -687,12 +734,12 @@
             label5.TabIndex = 8;
             label5.Text = "Item Stocks";
             // 
-            // textBox7
+            // txtInvItemStocks
             // 
-            textBox7.Location = new Point(17, 242);
-            textBox7.Name = "textBox7";
-            textBox7.Size = new Size(208, 27);
-            textBox7.TabIndex = 7;
+            txtInvItemStocks.Location = new Point(17, 242);
+            txtInvItemStocks.Name = "txtInvItemStocks";
+            txtInvItemStocks.Size = new Size(208, 27);
+            txtInvItemStocks.TabIndex = 7;
             // 
             // label4
             // 
@@ -703,13 +750,14 @@
             label4.TabIndex = 6;
             label4.Text = "Category";
             // 
-            // comboBox3
+            // cmbInvCategory
             // 
-            comboBox3.FormattingEnabled = true;
-            comboBox3.Location = new Point(17, 110);
-            comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(208, 28);
-            comboBox3.TabIndex = 5;
+            cmbInvCategory.FormattingEnabled = true;
+            cmbInvCategory.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
+            cmbInvCategory.Location = new Point(17, 110);
+            cmbInvCategory.Name = "cmbInvCategory";
+            cmbInvCategory.Size = new Size(208, 28);
+            cmbInvCategory.TabIndex = 5;
             // 
             // label3
             // 
@@ -720,12 +768,12 @@
             label3.TabIndex = 4;
             label3.Text = "Item Price";
             // 
-            // textBox6
+            // txtInvItemPrice
             // 
-            textBox6.Location = new Point(17, 174);
-            textBox6.Name = "textBox6";
-            textBox6.Size = new Size(208, 27);
-            textBox6.TabIndex = 3;
+            txtInvItemPrice.Location = new Point(17, 174);
+            txtInvItemPrice.Name = "txtInvItemPrice";
+            txtInvItemPrice.Size = new Size(208, 27);
+            txtInvItemPrice.TabIndex = 3;
             // 
             // label1
             // 
@@ -736,94 +784,92 @@
             label1.TabIndex = 2;
             label1.Text = "Item Name";
             // 
-            // textBox5
+            // txtInvItemName
             // 
-            textBox5.Location = new Point(17, 46);
-            textBox5.Name = "textBox5";
-            textBox5.Size = new Size(208, 27);
-            textBox5.TabIndex = 0;
+            txtInvItemName.Location = new Point(17, 46);
+            txtInvItemName.Name = "txtInvItemName";
+            txtInvItemName.Size = new Size(208, 27);
+            txtInvItemName.TabIndex = 0;
             // 
-            // button11
+            // btnInvAddItem
             // 
-            button11.Location = new Point(15, 335);
-            button11.Name = "button11";
-            button11.Size = new Size(94, 29);
-            button11.TabIndex = 1;
-            button11.Text = "Add +";
-            button11.UseVisualStyleBackColor = true;
+            btnInvAddItem.Location = new Point(15, 335);
+            btnInvAddItem.Name = "btnInvAddItem";
+            btnInvAddItem.Size = new Size(94, 29);
+            btnInvAddItem.TabIndex = 1;
+            btnInvAddItem.Text = "Add +";
+            btnInvAddItem.UseVisualStyleBackColor = true;
             // 
-            // button12
+            // btnInvEditItem
             // 
-            button12.Location = new Point(17, 453);
-            button12.Name = "button12";
-            button12.Size = new Size(208, 29);
-            button12.TabIndex = 4;
-            button12.Text = "Edit Item";
-            button12.UseVisualStyleBackColor = true;
+            btnInvEditItem.Location = new Point(17, 453);
+            btnInvEditItem.Name = "btnInvEditItem";
+            btnInvEditItem.Size = new Size(208, 29);
+            btnInvEditItem.TabIndex = 4;
+            btnInvEditItem.Text = "Edit Item";
+            btnInvEditItem.UseVisualStyleBackColor = true;
             // 
-            // button13
+            // btnInvDeleteItem
             // 
-            button13.Location = new Point(17, 418);
-            button13.Name = "button13";
-            button13.Size = new Size(208, 29);
-            button13.TabIndex = 3;
-            button13.Text = "Delete Item ";
-            button13.UseVisualStyleBackColor = true;
+            btnInvDeleteItem.Location = new Point(17, 418);
+            btnInvDeleteItem.Name = "btnInvDeleteItem";
+            btnInvDeleteItem.Size = new Size(208, 29);
+            btnInvDeleteItem.TabIndex = 3;
+            btnInvDeleteItem.Text = "Delete Item ";
+            btnInvDeleteItem.UseVisualStyleBackColor = true;
             // 
             // panel4
             // 
-            panel4.Controls.Add(dataGridView1);
+            panel4.Controls.Add(dgvInventory);
             panel4.Dock = DockStyle.Right;
             panel4.Location = new Point(330, 125);
             panel4.Name = "panel4";
             panel4.Size = new Size(967, 569);
             panel4.TabIndex = 14;
             // 
-            // dataGridView1
+            // dgvInventory
             // 
-            dataGridView1.AllowUserToOrderColumns = true;
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.BackgroundColor = SystemColors.ButtonFace;
-            dataGridView1.BorderStyle = BorderStyle.Fixed3D;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { ColItemName, ColCategory, ColPrices, ColStocks });
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.GridColor = SystemColors.InactiveCaptionText;
-            dataGridView1.Location = new Point(0, 0);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.Size = new Size(967, 569);
-            dataGridView1.TabIndex = 10;
+            dgvInventory.AllowUserToOrderColumns = true;
+            dgvInventory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvInventory.BackgroundColor = SystemColors.ButtonFace;
+            dgvInventory.BorderStyle = BorderStyle.Fixed3D;
+            dgvInventory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvInventory.Columns.AddRange(new DataGridViewColumn[] { colInvName, colInvCategory, colInvPrice, colInvStocks });
+            dgvInventory.Dock = DockStyle.Fill;
+            dgvInventory.GridColor = SystemColors.InactiveCaptionText;
+            dgvInventory.Location = new Point(0, 0);
+            dgvInventory.Name = "dgvInventory";
+            dgvInventory.RowHeadersWidth = 51;
+            dgvInventory.Size = new Size(967, 569);
+            dgvInventory.TabIndex = 10;
             // 
-            // ColItemName
+            // colInvName
             // 
-            dataGridViewCellStyle4.Format = "₱ #,##0.00";
-            dataGridViewCellStyle4.NullValue = null;
-            ColItemName.DefaultCellStyle = dataGridViewCellStyle4;
-            ColItemName.HeaderText = "Item Name ";
-            ColItemName.MinimumWidth = 6;
-            ColItemName.Name = "ColItemName";
+            dataGridViewCellStyle3.Format = "₱ #,##0.00";
+            dataGridViewCellStyle3.NullValue = null;
+            colInvName.DefaultCellStyle = dataGridViewCellStyle3;
+            colInvName.HeaderText = "Item Name ";
+            colInvName.MinimumWidth = 6;
+            colInvName.Name = "colInvName";
             // 
-            // ColCategory
+            // colInvCategory
             // 
-            ColCategory.HeaderText = "Category";
-            ColCategory.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
-            ColCategory.MinimumWidth = 6;
-            ColCategory.Name = "ColCategory";
-            ColCategory.Resizable = DataGridViewTriState.True;
-            ColCategory.SortMode = DataGridViewColumnSortMode.Automatic;
+            colInvCategory.HeaderText = "Category";
+            colInvCategory.MinimumWidth = 6;
+            colInvCategory.Name = "colInvCategory";
+            colInvCategory.Resizable = DataGridViewTriState.True;
             // 
-            // ColPrices
+            // colInvPrice
             // 
-            ColPrices.HeaderText = "Prices (₱)";
-            ColPrices.MinimumWidth = 6;
-            ColPrices.Name = "ColPrices";
+            colInvPrice.HeaderText = "Prices (₱)";
+            colInvPrice.MinimumWidth = 6;
+            colInvPrice.Name = "colInvPrice";
             // 
-            // ColStocks
+            // colInvStocks
             // 
-            ColStocks.HeaderText = "Stocks";
-            ColStocks.MinimumWidth = 6;
-            ColStocks.Name = "ColStocks";
+            colInvStocks.HeaderText = "Stocks";
+            colInvStocks.MinimumWidth = 6;
+            colInvStocks.Name = "colInvStocks";
             // 
             // panel3
             // 
@@ -839,10 +885,10 @@
             materialCard1.BackColor = Color.FromArgb(255, 255, 255);
             materialCard1.BorderStyle = BorderStyle.Fixed3D;
             materialCard1.Controls.Add(labelInv);
-            materialCard1.Controls.Add(button3);
-            materialCard1.Controls.Add(textBox2);
-            materialCard1.Controls.Add(comboBox1);
-            materialCard1.Controls.Add(button2);
+            materialCard1.Controls.Add(btnInvSearch);
+            materialCard1.Controls.Add(txtInvSearch);
+            materialCard1.Controls.Add(cmbInvFilterCategory);
+            materialCard1.Controls.Add(btnInvFilterApply);
             materialCard1.Depth = 0;
             materialCard1.Dock = DockStyle.Fill;
             materialCard1.ForeColor = Color.FromArgb(222, 0, 0, 0);
@@ -865,43 +911,43 @@
             labelInv.TabIndex = 14;
             labelInv.Text = "Inventory";
             // 
-            // button3
+            // btnInvSearch
             // 
-            button3.BackColor = SystemColors.ButtonHighlight;
-            button3.Location = new Point(1073, 37);
-            button3.Name = "button3";
-            button3.Size = new Size(113, 29);
-            button3.TabIndex = 9;
-            button3.Text = "Search";
-            button3.UseVisualStyleBackColor = false;
+            btnInvSearch.BackColor = SystemColors.ButtonHighlight;
+            btnInvSearch.Location = new Point(1073, 37);
+            btnInvSearch.Name = "btnInvSearch";
+            btnInvSearch.Size = new Size(113, 29);
+            btnInvSearch.TabIndex = 9;
+            btnInvSearch.Text = "Search";
+            btnInvSearch.UseVisualStyleBackColor = false;
             // 
-            // textBox2
+            // txtInvSearch
             // 
-            textBox2.Location = new Point(782, 39);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(285, 27);
-            textBox2.TabIndex = 8;
-            textBox2.Text = "Enter item name...";
+            txtInvSearch.Location = new Point(782, 39);
+            txtInvSearch.Name = "txtInvSearch";
+            txtInvSearch.Size = new Size(285, 27);
+            txtInvSearch.TabIndex = 8;
+            txtInvSearch.Text = "Enter item name...";
             // 
-            // comboBox1
+            // cmbInvFilterCategory
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
-            comboBox1.Location = new Point(782, 84);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(285, 28);
-            comboBox1.TabIndex = 4;
-            comboBox1.Text = "Categories";
+            cmbInvFilterCategory.FormattingEnabled = true;
+            cmbInvFilterCategory.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
+            cmbInvFilterCategory.Location = new Point(782, 84);
+            cmbInvFilterCategory.Name = "cmbInvFilterCategory";
+            cmbInvFilterCategory.Size = new Size(285, 28);
+            cmbInvFilterCategory.TabIndex = 4;
+            cmbInvFilterCategory.Text = "Categories";
             // 
-            // button2
+            // btnInvFilterApply
             // 
-            button2.BackColor = SystemColors.ButtonFace;
-            button2.Location = new Point(1073, 83);
-            button2.Name = "button2";
-            button2.Size = new Size(113, 29);
-            button2.TabIndex = 2;
-            button2.Text = "Show Only";
-            button2.UseVisualStyleBackColor = false;
+            btnInvFilterApply.BackColor = SystemColors.ButtonFace;
+            btnInvFilterApply.Location = new Point(1073, 83);
+            btnInvFilterApply.Name = "btnInvFilterApply";
+            btnInvFilterApply.Size = new Size(113, 29);
+            btnInvFilterApply.TabIndex = 2;
+            btnInvFilterApply.Text = "Show Only";
+            btnInvFilterApply.UseVisualStyleBackColor = false;
             // 
             // panel2
             // 
@@ -979,115 +1025,67 @@
             materialTabControl1.Size = new Size(1349, 738);
             materialTabControl1.TabIndex = 0;
             // 
-            // panel20
+            // colSLName
             // 
-            panel20.BorderStyle = BorderStyle.Fixed3D;
-            panel20.Controls.Add(materialCard6);
-            panel20.Controls.Add(button14);
-            panel20.Controls.Add(button15);
-            panel20.Dock = DockStyle.Left;
-            panel20.Location = new Point(85, 128);
-            panel20.Name = "panel20";
-            panel20.Size = new Size(242, 569);
-            panel20.TabIndex = 18;
+            dataGridViewCellStyle4.Format = "₱ #,##0.00";
+            dataGridViewCellStyle4.NullValue = null;
+            colSLName.DefaultCellStyle = dataGridViewCellStyle4;
+            colSLName.HeaderText = "Item Name ";
+            colSLName.MinimumWidth = 6;
+            colSLName.Name = "colSLName";
             // 
-            // materialCard6
+            // colSLItemsold
             // 
-            materialCard6.BackColor = Color.FromArgb(255, 255, 255);
-            materialCard6.BorderStyle = BorderStyle.Fixed3D;
-            materialCard6.Controls.Add(label7);
-            materialCard6.Controls.Add(comboBox5);
-            materialCard6.Controls.Add(label8);
-            materialCard6.Controls.Add(textBox9);
-            materialCard6.Controls.Add(label9);
-            materialCard6.Controls.Add(textBox10);
-            materialCard6.Controls.Add(button10);
-            materialCard6.Depth = 0;
-            materialCard6.Dock = DockStyle.Top;
-            materialCard6.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard6.Location = new Point(0, 0);
-            materialCard6.Margin = new Padding(14);
-            materialCard6.MouseState = MaterialSkin.MouseState.HOVER;
-            materialCard6.Name = "materialCard6";
-            materialCard6.Padding = new Padding(14);
-            materialCard6.Size = new Size(238, 385);
-            materialCard6.TabIndex = 5;
+            colSLItemsold.HeaderText = "Item Sold";
+            colSLItemsold.MinimumWidth = 6;
+            colSLItemsold.Name = "colSLItemsold";
             // 
-            // label7
+            // colSLCategory
             // 
-            label7.AutoSize = true;
-            label7.Location = new Point(15, 87);
-            label7.Name = "label7";
-            label7.Size = new Size(69, 20);
-            label7.TabIndex = 6;
-            label7.Text = "Category";
+            colSLCategory.HeaderText = "Category";
+            colSLCategory.MinimumWidth = 6;
+            colSLCategory.Name = "colSLCategory";
+            colSLCategory.Resizable = DataGridViewTriState.True;
             // 
-            // comboBox5
+            // colSlPrice
             // 
-            comboBox5.FormattingEnabled = true;
-            comboBox5.Location = new Point(17, 110);
-            comboBox5.Name = "comboBox5";
-            comboBox5.Size = new Size(208, 28);
-            comboBox5.TabIndex = 5;
+            colSlPrice.HeaderText = "Total Amount (₱)";
+            colSlPrice.MinimumWidth = 6;
+            colSlPrice.Name = "colSlPrice";
             // 
-            // label8
+            // colSLDateTime
             // 
-            label8.AutoSize = true;
-            label8.Location = new Point(17, 151);
-            label8.Name = "label8";
-            label8.Size = new Size(75, 20);
-            label8.TabIndex = 4;
-            label8.Text = "Item Price";
+            colSLDateTime.HeaderText = "Time And Date:";
+            colSLDateTime.MinimumWidth = 6;
+            colSLDateTime.Name = "colSLDateTime";
             // 
-            // textBox9
+            // colTabName
             // 
-            textBox9.Location = new Point(17, 174);
-            textBox9.Name = "textBox9";
-            textBox9.Size = new Size(208, 27);
-            textBox9.TabIndex = 3;
+            colTabName.FillWeight = 94.23874F;
+            colTabName.HeaderText = "Costumer Name";
+            colTabName.MinimumWidth = 6;
+            colTabName.Name = "colTabName";
             // 
-            // label9
+            // colTabBalance
             // 
-            label9.AutoSize = true;
-            label9.Location = new Point(15, 23);
-            label9.Name = "label9";
-            label9.Size = new Size(83, 20);
-            label9.TabIndex = 2;
-            label9.Text = "Item Name";
+            colTabBalance.FillWeight = 101.558464F;
+            colTabBalance.HeaderText = "Active Balance";
+            colTabBalance.MinimumWidth = 6;
+            colTabBalance.Name = "colTabBalance";
             // 
-            // textBox10
+            // colTabStatus
             // 
-            textBox10.Location = new Point(17, 46);
-            textBox10.Name = "textBox10";
-            textBox10.Size = new Size(208, 27);
-            textBox10.TabIndex = 0;
+            colTabStatus.FillWeight = 104.423553F;
+            colTabStatus.HeaderText = "Debt Status";
+            colTabStatus.MinimumWidth = 6;
+            colTabStatus.Name = "colTabStatus";
             // 
-            // button10
+            // colTabDate
             // 
-            button10.Location = new Point(15, 335);
-            button10.Name = "button10";
-            button10.Size = new Size(94, 29);
-            button10.TabIndex = 1;
-            button10.Text = "Add +";
-            button10.UseVisualStyleBackColor = true;
-            // 
-            // button14
-            // 
-            button14.Location = new Point(17, 453);
-            button14.Name = "button14";
-            button14.Size = new Size(208, 29);
-            button14.TabIndex = 4;
-            button14.Text = "Edit Item";
-            button14.UseVisualStyleBackColor = true;
-            // 
-            // button15
-            // 
-            button15.Location = new Point(17, 418);
-            button15.Name = "button15";
-            button15.Size = new Size(208, 29);
-            button15.TabIndex = 3;
-            button15.Text = "Delete Item ";
-            button15.UseVisualStyleBackColor = true;
+            colTabDate.FillWeight = 99.77925F;
+            colTabDate.HeaderText = "Begin Date and Time ";
+            colTabDate.MinimumWidth = 6;
+            colTabDate.Name = "colTabDate";
             // 
             // Form1
             // 
@@ -1108,7 +1106,7 @@
             tabPage5.ResumeLayout(false);
             tabPage4.ResumeLayout(false);
             panel17.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTabLedger).EndInit();
             panel16.ResumeLayout(false);
             materialCard3.ResumeLayout(false);
             materialCard3.PerformLayout();
@@ -1117,26 +1115,26 @@
             materialCard4.ResumeLayout(false);
             materialCard4.PerformLayout();
             tabPage3.ResumeLayout(false);
+            panel20.ResumeLayout(false);
+            materialCard6.ResumeLayout(false);
+            materialCard6.PerformLayout();
             panel14.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvSalesLedger).EndInit();
             panel13.ResumeLayout(false);
-            materialCard2.ResumeLayout(false);
-            materialCard2.PerformLayout();
+            dtpSlFilterDate.ResumeLayout(false);
+            dtpSlFilterDate.PerformLayout();
             tabPage2.ResumeLayout(false);
             MainInvPanel.ResumeLayout(false);
             panel19.ResumeLayout(false);
             materialCard5.ResumeLayout(false);
             materialCard5.PerformLayout();
             panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvInventory).EndInit();
             panel3.ResumeLayout(false);
             materialCard1.ResumeLayout(false);
             materialCard1.PerformLayout();
             tabPage1.ResumeLayout(false);
             materialTabControl1.ResumeLayout(false);
-            panel20.ResumeLayout(false);
-            materialCard6.ResumeLayout(false);
-            materialCard6.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1152,10 +1150,10 @@
         private Panel MainInvPanel;
         private Panel panel2;
         private MaterialSkin.Controls.MaterialCard materialCard1;
-        private Button button3;
-        private TextBox textBox2;
-        private ComboBox comboBox1;
-        private Button button2;
+        private Button btnInvSearch;
+        private TextBox txtInvSearch;
+        private ComboBox cmbInvFilterCategory;
+        private Button btnInvFilterApply;
         private Panel panel1;
         private TabPage tabPage1;
         private MaterialSkin.Controls.MaterialTabControl materialTabControl1;
@@ -1169,72 +1167,76 @@
         private Panel panel5;
         private Panel panel12;
         private Panel panel8;
-        private DataGridView dataGridView1;
-        private DataGridViewTextBoxColumn ColItemName;
-        private DataGridViewComboBoxColumn ColCategory;
-        private DataGridViewTextBoxColumn ColPrices;
-        private DataGridViewTextBoxColumn ColStocks;
+        private DataGridView dgvInventory;
         private Panel panel13;
         private Panel panel14;
-        private DataGridView dataGridView2;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn Column1;
-        private DataGridViewComboBoxColumn dataGridViewComboBoxColumn1;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private MaterialSkin.Controls.MaterialCard materialCard2;
-        private Button button1;
-        private TextBox textBox1;
-        private ComboBox comboBox2;
-        private Button button4;
+        private DataGridView dgvSalesLedger;
+        private MaterialSkin.Controls.MaterialCard dtpSlFilterDate;
+        private Button btnSlSearch;
+        private TextBox txtSlSearch;
+        private ComboBox cmbSlFilterCategory;
+        private Button btnSlFilterApply;
         private DateTimePicker dateTimePicker1;
-        private Button button5;
+        private Button btnSlShowDate;
         private Label labelSL;
         private Label labelInv;
         private Panel panel15;
         private Panel panel17;
         private Panel panel16;
         private Panel panel18;
-        private DataGridView dataGridView3;
+        private DataGridView dgvTabLedger;
         private DataGridViewTextBoxColumn Column2;
         private DataGridViewTextBoxColumn Column3;
         private DataGridViewTextBoxColumn Column4;
         private DataGridViewTextBoxColumn Column5;
-        private TextBox textBox3;
-        private ComboBox comboBox4;
-        private TextBox textBox4;
+        private TextBox txtTabCustomerName;
+        private ComboBox cmbTabFilterStatus;
+        private TextBox txtTabSearchName;
         private Label label2;
-        private Button button7;
-        private Button button6;
+        private Button btnTabAddCustomer;
+        private Button btnTabSearch;
         private MaterialSkin.Controls.MaterialCard materialCard3;
-        private Button button9;
-        private Button button8;
+        private Button btnTabEditCustomer;
+        private Button btnTabDeleteCustomer;
         private Button BtnVCDL;
         private MaterialSkin.Controls.MaterialCard materialCard4;
         private Label labelTL;
         private Panel panel19;
         private MaterialSkin.Controls.MaterialCard materialCard5;
         private Label label1;
-        private TextBox textBox5;
-        private Button button11;
-        private Button button12;
-        private Button button13;
+        private TextBox txtInvItemName;
+        private Button btnInvAddItem;
+        private Button btnInvEditItem;
+        private Button btnInvDeleteItem;
         private Label label3;
-        private TextBox textBox6;
+        private TextBox txtInvItemPrice;
         private Label label5;
-        private TextBox textBox7;
+        private TextBox txtInvItemStocks;
         private Label label4;
-        private ComboBox comboBox3;
+        private ComboBox cmbInvCategory;
         private Panel panel20;
         private MaterialSkin.Controls.MaterialCard materialCard6;
         private Label label7;
-        private ComboBox comboBox5;
+        private ComboBox cmbSlCategory;
         private Label label8;
-        private TextBox textBox9;
+        private TextBox txtSlItemPrice;
         private Label label9;
-        private TextBox textBox10;
-        private Button button10;
-        private Button button14;
-        private Button button15;
+        private TextBox txtSlItemName;
+        private Button btnSlAddItem;
+        private Button btnSlEditItem;
+        private Button btnSlDeleteItem;
+        private DataGridViewTextBoxColumn colInvName;
+        private DataGridViewTextBoxColumn colInvCategory;
+        private DataGridViewTextBoxColumn colInvPrice;
+        private DataGridViewTextBoxColumn colInvStocks;
+        private DataGridViewTextBoxColumn colSLName;
+        private DataGridViewTextBoxColumn colSLItemsold;
+        private DataGridViewTextBoxColumn colSLCategory;
+        private DataGridViewTextBoxColumn colSlPrice;
+        private DataGridViewTextBoxColumn colSLDateTime;
+        private DataGridViewTextBoxColumn colTabName;
+        private DataGridViewTextBoxColumn colTabBalance;
+        private DataGridViewTextBoxColumn colTabStatus;
+        private DataGridViewTextBoxColumn colTabDate;
     }
 }

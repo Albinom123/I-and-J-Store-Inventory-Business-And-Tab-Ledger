@@ -32,28 +32,33 @@
             panel10 = new Panel();
             panel18 = new Panel();
             materialCard1 = new MaterialSkin.Controls.MaterialCard();
-            label1 = new Label();
+            lblDlCustomerName = new Label();
             labelTL = new Label();
             panel16 = new Panel();
             buttonReturn = new Button();
             buttonSave = new Button();
             materialCard3 = new MaterialSkin.Controls.MaterialCard();
-            textBox3 = new TextBox();
-            button7 = new Button();
-            button9 = new Button();
-            button8 = new Button();
-            dataGridView3 = new DataGridView();
-            Column5 = new DataGridViewTextBoxColumn();
-            Column1 = new DataGridViewTextBoxColumn();
-            Column6 = new DataGridViewComboBoxColumn();
-            Column2 = new DataGridViewComboBoxColumn();
-            Column3 = new DataGridViewTextBoxColumn();
-            Column4 = new DataGridViewTextBoxColumn();
+            label7 = new Label();
+            cmbDlCategory = new ComboBox();
+            label8 = new Label();
+            txtDlAmount = new TextBox();
+            label9 = new Label();
+            txtDlItemName = new TextBox();
+            btnDlAddItem = new Button();
+            btnDlEditDebt = new Button();
+            btnDlDeleteDebt = new Button();
+            dgvDebtList = new DataGridView();
+            colDlDate = new DataGridViewTextBoxColumn();
+            colDlItem = new DataGridViewTextBoxColumn();
+            colDlCategory = new DataGridViewTextBoxColumn();
+            colDlType = new DataGridViewComboBoxColumn();
+            colDlAmount = new DataGridViewTextBoxColumn();
+            colDlRunningBalance = new DataGridViewTextBoxColumn();
             panel18.SuspendLayout();
             materialCard1.SuspendLayout();
             panel16.SuspendLayout();
             materialCard3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvDebtList).BeginInit();
             SuspendLayout();
             // 
             // panel6
@@ -76,7 +81,7 @@
             // 
             // panel18
             // 
-            panel18.BackColor = Color.Goldenrod;
+            panel18.BackColor = SystemColors.ControlLightLight;
             panel18.BorderStyle = BorderStyle.Fixed3D;
             panel18.Controls.Add(materialCard1);
             panel18.Controls.Add(labelTL);
@@ -89,32 +94,33 @@
             // materialCard1
             // 
             materialCard1.BackColor = Color.FromArgb(255, 255, 255);
-            materialCard1.Controls.Add(label1);
+            materialCard1.Controls.Add(lblDlCustomerName);
             materialCard1.Depth = 0;
             materialCard1.Dock = DockStyle.Right;
             materialCard1.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            materialCard1.Location = new Point(749, 0);
+            materialCard1.Location = new Point(766, 0);
             materialCard1.Margin = new Padding(14);
             materialCard1.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard1.Name = "materialCard1";
             materialCard1.Padding = new Padding(14);
-            materialCard1.Size = new Size(488, 117);
+            materialCard1.Size = new Size(471, 117);
             materialCard1.TabIndex = 15;
             // 
-            // label1
+            // lblDlCustomerName
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(38, 24);
-            label1.Name = "label1";
-            label1.Size = new Size(119, 20);
-            label1.TabIndex = 15;
-            label1.Text = "Customer Name:";
+            lblDlCustomerName.AutoSize = true;
+            lblDlCustomerName.Location = new Point(38, 24);
+            lblDlCustomerName.Name = "lblDlCustomerName";
+            lblDlCustomerName.Size = new Size(119, 20);
+            lblDlCustomerName.TabIndex = 15;
+            lblDlCustomerName.Text = "Customer Name:";
             // 
             // labelTL
             // 
             labelTL.AutoSize = true;
+            labelTL.BackColor = SystemColors.ControlLightLight;
             labelTL.Font = new Font("Segoe UI", 24F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
-            labelTL.ForeColor = Color.OldLace;
+            labelTL.ForeColor = Color.Goldenrod;
             labelTL.Location = new Point(17, 24);
             labelTL.Name = "labelTL";
             labelTL.Size = new Size(413, 54);
@@ -123,13 +129,13 @@
             // 
             // panel16
             // 
-            panel16.BackColor = Color.Goldenrod;
+            panel16.BackColor = SystemColors.ControlLightLight;
             panel16.BorderStyle = BorderStyle.Fixed3D;
             panel16.Controls.Add(buttonReturn);
             panel16.Controls.Add(buttonSave);
             panel16.Controls.Add(materialCard3);
-            panel16.Controls.Add(button9);
-            panel16.Controls.Add(button8);
+            panel16.Controls.Add(btnDlEditDebt);
+            panel16.Controls.Add(btnDlDeleteDebt);
             panel16.Dock = DockStyle.Left;
             panel16.Location = new Point(82, 121);
             panel16.Name = "panel16";
@@ -138,7 +144,7 @@
             // 
             // buttonReturn
             // 
-            buttonReturn.Location = new Point(17, 533);
+            buttonReturn.Location = new Point(17, 623);
             buttonReturn.Name = "buttonReturn";
             buttonReturn.Size = new Size(208, 29);
             buttonReturn.TabIndex = 7;
@@ -148,7 +154,7 @@
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(17, 479);
+            buttonSave.Location = new Point(17, 575);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(208, 29);
             buttonSave.TabIndex = 6;
@@ -158,8 +164,13 @@
             // materialCard3
             // 
             materialCard3.BackColor = Color.FromArgb(255, 255, 255);
-            materialCard3.Controls.Add(textBox3);
-            materialCard3.Controls.Add(button7);
+            materialCard3.Controls.Add(label7);
+            materialCard3.Controls.Add(cmbDlCategory);
+            materialCard3.Controls.Add(label8);
+            materialCard3.Controls.Add(txtDlAmount);
+            materialCard3.Controls.Add(label9);
+            materialCard3.Controls.Add(txtDlItemName);
+            materialCard3.Controls.Add(btnDlAddItem);
             materialCard3.Depth = 0;
             materialCard3.Dock = DockStyle.Top;
             materialCard3.ForeColor = Color.FromArgb(222, 0, 0, 0);
@@ -168,108 +179,150 @@
             materialCard3.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard3.Name = "materialCard3";
             materialCard3.Padding = new Padding(14);
-            materialCard3.Size = new Size(244, 142);
+            materialCard3.Size = new Size(244, 420);
             materialCard3.TabIndex = 5;
             // 
-            // textBox3
+            // label7
             // 
-            textBox3.Location = new Point(17, 46);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(208, 27);
-            textBox3.TabIndex = 0;
+            label7.AutoSize = true;
+            label7.Location = new Point(15, 95);
+            label7.Name = "label7";
+            label7.Size = new Size(69, 20);
+            label7.TabIndex = 12;
+            label7.Text = "Category";
             // 
-            // button7
+            // cmbDlCategory
             // 
-            button7.Location = new Point(58, 96);
-            button7.Name = "button7";
-            button7.Size = new Size(120, 29);
-            button7.TabIndex = 1;
-            button7.Text = "Add Item +";
-            button7.UseVisualStyleBackColor = true;
+            cmbDlCategory.FormattingEnabled = true;
+            cmbDlCategory.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
+            cmbDlCategory.Location = new Point(17, 118);
+            cmbDlCategory.Name = "cmbDlCategory";
+            cmbDlCategory.Size = new Size(208, 28);
+            cmbDlCategory.TabIndex = 11;
             // 
-            // button9
+            // label8
             // 
-            button9.Location = new Point(17, 300);
-            button9.Name = "button9";
-            button9.Size = new Size(208, 29);
-            button9.TabIndex = 4;
-            button9.Text = "Edit Costumer Debt";
-            button9.UseVisualStyleBackColor = true;
+            label8.AutoSize = true;
+            label8.Location = new Point(17, 159);
+            label8.Name = "label8";
+            label8.Size = new Size(66, 20);
+            label8.TabIndex = 10;
+            label8.Text = "Amount ";
             // 
-            // button8
+            // txtDlAmount
             // 
-            button8.Location = new Point(17, 265);
-            button8.Name = "button8";
-            button8.Size = new Size(208, 29);
-            button8.TabIndex = 3;
-            button8.Text = "Delete Costumer Debt";
-            button8.UseVisualStyleBackColor = true;
+            txtDlAmount.Location = new Point(17, 182);
+            txtDlAmount.Name = "txtDlAmount";
+            txtDlAmount.Size = new Size(208, 27);
+            txtDlAmount.TabIndex = 9;
             // 
-            // dataGridView3
+            // label9
             // 
-            dataGridView3.AllowUserToOrderColumns = true;
-            dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView3.BackgroundColor = SystemColors.ControlLightLight;
-            dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView3.Columns.AddRange(new DataGridViewColumn[] { Column5, Column1, Column6, Column2, Column3, Column4 });
-            dataGridView3.Dock = DockStyle.Fill;
-            dataGridView3.GridColor = SystemColors.MenuText;
-            dataGridView3.Location = new Point(330, 121);
-            dataGridView3.Name = "dataGridView3";
-            dataGridView3.RowHeadersWidth = 51;
-            dataGridView3.Size = new Size(993, 689);
-            dataGridView3.TabIndex = 19;
+            label9.AutoSize = true;
+            label9.Location = new Point(15, 31);
+            label9.Name = "label9";
+            label9.Size = new Size(83, 20);
+            label9.TabIndex = 8;
+            label9.Text = "Item Name";
             // 
-            // Column5
+            // txtDlItemName
             // 
-            Column5.FillWeight = 99.77925F;
-            Column5.HeaderText = "Date and Time ";
-            Column5.MinimumWidth = 6;
-            Column5.Name = "Column5";
+            txtDlItemName.Location = new Point(17, 54);
+            txtDlItemName.Name = "txtDlItemName";
+            txtDlItemName.Size = new Size(208, 27);
+            txtDlItemName.TabIndex = 7;
             // 
-            // Column1
+            // btnDlAddItem
             // 
-            Column1.HeaderText = "Item ";
-            Column1.MinimumWidth = 6;
-            Column1.Name = "Column1";
+            btnDlAddItem.Location = new Point(56, 334);
+            btnDlAddItem.Name = "btnDlAddItem";
+            btnDlAddItem.Size = new Size(120, 29);
+            btnDlAddItem.TabIndex = 1;
+            btnDlAddItem.Text = "Add Item +";
+            btnDlAddItem.UseVisualStyleBackColor = true;
             // 
-            // Column6
+            // btnDlEditDebt
             // 
-            Column6.HeaderText = "Category";
-            Column6.MinimumWidth = 6;
-            Column6.Name = "Column6";
-            Column6.Resizable = DataGridViewTriState.True;
-            Column6.SortMode = DataGridViewColumnSortMode.Automatic;
+            btnDlEditDebt.Location = new Point(17, 519);
+            btnDlEditDebt.Name = "btnDlEditDebt";
+            btnDlEditDebt.Size = new Size(208, 29);
+            btnDlEditDebt.TabIndex = 4;
+            btnDlEditDebt.Text = "Edit Costumer Debt";
+            btnDlEditDebt.UseVisualStyleBackColor = true;
             // 
-            // Column2
+            // btnDlDeleteDebt
             // 
-            Column2.FillWeight = 94.23874F;
-            Column2.HeaderText = "Type";
-            Column2.Items.AddRange(new object[] { "Debt", "Payment" });
-            Column2.MinimumWidth = 6;
-            Column2.Name = "Column2";
-            Column2.Resizable = DataGridViewTriState.True;
-            Column2.SortMode = DataGridViewColumnSortMode.Automatic;
+            btnDlDeleteDebt.Location = new Point(17, 484);
+            btnDlDeleteDebt.Name = "btnDlDeleteDebt";
+            btnDlDeleteDebt.Size = new Size(208, 29);
+            btnDlDeleteDebt.TabIndex = 3;
+            btnDlDeleteDebt.Text = "Delete Costumer Debt";
+            btnDlDeleteDebt.UseVisualStyleBackColor = true;
             // 
-            // Column3
+            // dgvDebtList
             // 
-            Column3.FillWeight = 101.558464F;
-            Column3.HeaderText = "Amount ";
-            Column3.MinimumWidth = 6;
-            Column3.Name = "Column3";
+            dgvDebtList.AllowUserToOrderColumns = true;
+            dgvDebtList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvDebtList.BackgroundColor = SystemColors.ControlLightLight;
+            dgvDebtList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvDebtList.Columns.AddRange(new DataGridViewColumn[] { colDlDate, colDlItem, colDlCategory, colDlType, colDlAmount, colDlRunningBalance });
+            dgvDebtList.Dock = DockStyle.Fill;
+            dgvDebtList.GridColor = SystemColors.MenuText;
+            dgvDebtList.Location = new Point(330, 121);
+            dgvDebtList.Name = "dgvDebtList";
+            dgvDebtList.RowHeadersWidth = 51;
+            dgvDebtList.Size = new Size(993, 689);
+            dgvDebtList.TabIndex = 19;
             // 
-            // Column4
+            // colDlDate
             // 
-            Column4.FillWeight = 104.423553F;
-            Column4.HeaderText = "Runing Balance";
-            Column4.MinimumWidth = 6;
-            Column4.Name = "Column4";
+            colDlDate.FillWeight = 99.77925F;
+            colDlDate.HeaderText = "Date and Time ";
+            colDlDate.MinimumWidth = 6;
+            colDlDate.Name = "colDlDate";
+            // 
+            // colDlItem
+            // 
+            colDlItem.HeaderText = "Item ";
+            colDlItem.MinimumWidth = 6;
+            colDlItem.Name = "colDlItem";
+            // 
+            // colDlCategory
+            // 
+            colDlCategory.HeaderText = "Category";
+            colDlCategory.MinimumWidth = 6;
+            colDlCategory.Name = "colDlCategory";
+            colDlCategory.Resizable = DataGridViewTriState.True;
+            // 
+            // colDlType
+            // 
+            colDlType.FillWeight = 94.23874F;
+            colDlType.HeaderText = "Type";
+            colDlType.Items.AddRange(new object[] { "Debt", "Payment" });
+            colDlType.MinimumWidth = 6;
+            colDlType.Name = "colDlType";
+            colDlType.Resizable = DataGridViewTriState.True;
+            colDlType.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // colDlAmount
+            // 
+            colDlAmount.FillWeight = 101.558464F;
+            colDlAmount.HeaderText = "Amount ";
+            colDlAmount.MinimumWidth = 6;
+            colDlAmount.Name = "colDlAmount";
+            // 
+            // colDlRunningBalance
+            // 
+            colDlRunningBalance.FillWeight = 104.423553F;
+            colDlRunningBalance.HeaderText = "Runing Balance";
+            colDlRunningBalance.MinimumWidth = 6;
+            colDlRunningBalance.Name = "colDlRunningBalance";
             // 
             // UserControlDebtList
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(dataGridView3);
+            Controls.Add(dgvDebtList);
             Controls.Add(panel16);
             Controls.Add(panel18);
             Controls.Add(panel10);
@@ -283,7 +336,7 @@
             panel16.ResumeLayout(false);
             materialCard3.ResumeLayout(false);
             materialCard3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvDebtList).EndInit();
             ResumeLayout(false);
         }
 
@@ -293,22 +346,27 @@
         private Panel panel10;
         private Panel panel18;
         private MaterialSkin.Controls.MaterialCard materialCard1;
-        private Label label1;
+        private Label lblDlCustomerName;
         private Label labelTL;
         private Panel panel16;
         private MaterialSkin.Controls.MaterialCard materialCard3;
-        private TextBox textBox3;
-        private Button button7;
-        private Button button9;
-        private Button button8;
-        private DataGridView dataGridView3;
-        private DataGridViewTextBoxColumn Column5;
-        private DataGridViewTextBoxColumn Column1;
-        private DataGridViewComboBoxColumn Column6;
-        private DataGridViewComboBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column3;
-        private DataGridViewTextBoxColumn Column4;
+        private Button btnDlAddItem;
+        private Button btnDlEditDebt;
+        private Button btnDlDeleteDebt;
+        private DataGridView dgvDebtList;
         private Button buttonReturn;
         private Button buttonSave;
+        private Label label7;
+        private ComboBox cmbDlCategory;
+        private Label label8;
+        private TextBox txtDlAmount;
+        private Label label9;
+        private TextBox txtDlItemName;
+        private DataGridViewTextBoxColumn colDlDate;
+        private DataGridViewTextBoxColumn colDlItem;
+        private DataGridViewTextBoxColumn colDlCategory;
+        private DataGridViewComboBoxColumn colDlType;
+        private DataGridViewTextBoxColumn colDlAmount;
+        private DataGridViewTextBoxColumn colDlRunningBalance;
     }
 }
