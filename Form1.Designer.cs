@@ -23,8 +23,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             imageList1 = new ImageList(components);
             SideBarTimer = new System.Windows.Forms.Timer(components);
             tabPage5 = new TabPage();
@@ -63,6 +63,11 @@
             btnSlDeleteItem = new Button();
             panel14 = new Panel();
             dgvSalesLedger = new DataGridView();
+            colSLName = new DataGridViewTextBoxColumn();
+            colSLItemsold = new DataGridViewTextBoxColumn();
+            colSLCategory = new DataGridViewTextBoxColumn();
+            colSlPrice = new DataGridViewTextBoxColumn();
+            colSLDateTime = new DataGridViewTextBoxColumn();
             panel13 = new Panel();
             dtpSlFilterDate = new MaterialSkin.Controls.MaterialCard();
             labelSL = new Label();
@@ -109,11 +114,6 @@
             panel12 = new Panel();
             panel8 = new Panel();
             materialTabControl1 = new MaterialSkin.Controls.MaterialTabControl();
-            colSLName = new DataGridViewTextBoxColumn();
-            colSLItemsold = new DataGridViewTextBoxColumn();
-            colSLCategory = new DataGridViewTextBoxColumn();
-            colSlPrice = new DataGridViewTextBoxColumn();
-            colSLDateTime = new DataGridViewTextBoxColumn();
             colTabName = new DataGridViewTextBoxColumn();
             colTabBalance = new DataGridViewTextBoxColumn();
             colTabStatus = new DataGridViewTextBoxColumn();
@@ -293,6 +293,7 @@
             btnTabAddCustomer.TabIndex = 1;
             btnTabAddCustomer.Text = "Add +";
             btnTabAddCustomer.UseVisualStyleBackColor = true;
+            btnTabAddCustomer.Click += btnTabAddCustomer_Click;
             // 
             // btnTabEditCustomer
             // 
@@ -504,6 +505,7 @@
             btnSlAddItem.TabIndex = 1;
             btnSlAddItem.Text = "Add +";
             btnSlAddItem.UseVisualStyleBackColor = true;
+            btnSlAddItem.Click += btnSlAddItem_Click;
             // 
             // btnSlEditItem
             // 
@@ -513,6 +515,7 @@
             btnSlEditItem.TabIndex = 4;
             btnSlEditItem.Text = "Edit Item";
             btnSlEditItem.UseVisualStyleBackColor = true;
+            btnSlEditItem.Click += btnSlEditItem_Click;
             // 
             // btnSlDeleteItem
             // 
@@ -522,6 +525,7 @@
             btnSlDeleteItem.TabIndex = 3;
             btnSlDeleteItem.Text = "Delete Item ";
             btnSlDeleteItem.UseVisualStyleBackColor = true;
+            btnSlDeleteItem.Click += btnSlDeleteItem_Click;
             // 
             // panel14
             // 
@@ -547,6 +551,40 @@
             dgvSalesLedger.RowHeadersWidth = 51;
             dgvSalesLedger.Size = new Size(967, 569);
             dgvSalesLedger.TabIndex = 11;
+            // 
+            // colSLName
+            // 
+            dataGridViewCellStyle1.Format = "₱ #,##0.00";
+            dataGridViewCellStyle1.NullValue = null;
+            colSLName.DefaultCellStyle = dataGridViewCellStyle1;
+            colSLName.HeaderText = "Item Name ";
+            colSLName.MinimumWidth = 6;
+            colSLName.Name = "colSLName";
+            // 
+            // colSLItemsold
+            // 
+            colSLItemsold.HeaderText = "Item Sold";
+            colSLItemsold.MinimumWidth = 6;
+            colSLItemsold.Name = "colSLItemsold";
+            // 
+            // colSLCategory
+            // 
+            colSLCategory.HeaderText = "Category";
+            colSLCategory.MinimumWidth = 6;
+            colSLCategory.Name = "colSLCategory";
+            colSLCategory.Resizable = DataGridViewTriState.True;
+            // 
+            // colSlPrice
+            // 
+            colSlPrice.HeaderText = "Total Amount (₱)";
+            colSlPrice.MinimumWidth = 6;
+            colSlPrice.Name = "colSlPrice";
+            // 
+            // colSLDateTime
+            // 
+            colSLDateTime.HeaderText = "Time And Date:";
+            colSLDateTime.MinimumWidth = 6;
+            colSLDateTime.Name = "colSLDateTime";
             // 
             // panel13
             // 
@@ -607,6 +645,7 @@
             btnSlShowDate.TabIndex = 11;
             btnSlShowDate.Text = "Show Specific Date:";
             btnSlShowDate.UseVisualStyleBackColor = false;
+            btnSlShowDate.Click += btnSlShowDate_Click;
             // 
             // btnSlSearch
             // 
@@ -617,6 +656,7 @@
             btnSlSearch.TabIndex = 9;
             btnSlSearch.Text = "Search";
             btnSlSearch.UseVisualStyleBackColor = false;
+            btnSlSearch.Click += btnSlSearch_Click;
             // 
             // txtSlSearch
             // 
@@ -629,7 +669,7 @@
             // cmbSlFilterCategory
             // 
             cmbSlFilterCategory.FormattingEnabled = true;
-            cmbSlFilterCategory.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
+            cmbSlFilterCategory.Items.AddRange(new object[] { "All", "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
             cmbSlFilterCategory.Location = new Point(782, 84);
             cmbSlFilterCategory.Name = "cmbSlFilterCategory";
             cmbSlFilterCategory.Size = new Size(285, 28);
@@ -645,6 +685,7 @@
             btnSlFilterApply.TabIndex = 2;
             btnSlFilterApply.Text = "Show Only";
             btnSlFilterApply.UseVisualStyleBackColor = false;
+            btnSlFilterApply.Click += btnSlFilterApply_Click;
             // 
             // panel11
             // 
@@ -799,6 +840,7 @@
             btnInvAddItem.TabIndex = 1;
             btnInvAddItem.Text = "Add +";
             btnInvAddItem.UseVisualStyleBackColor = true;
+            btnInvAddItem.Click += btnInvAddItem_Click;
             // 
             // btnInvEditItem
             // 
@@ -808,6 +850,7 @@
             btnInvEditItem.TabIndex = 4;
             btnInvEditItem.Text = "Edit Item";
             btnInvEditItem.UseVisualStyleBackColor = true;
+            btnInvEditItem.Click += btnInvEditItem_Click;
             // 
             // btnInvDeleteItem
             // 
@@ -817,6 +860,7 @@
             btnInvDeleteItem.TabIndex = 3;
             btnInvDeleteItem.Text = "Delete Item ";
             btnInvDeleteItem.UseVisualStyleBackColor = true;
+            btnInvDeleteItem.Click += btnInvDeleteItem_Click;
             // 
             // panel4
             // 
@@ -842,12 +886,13 @@
             dgvInventory.RowHeadersWidth = 51;
             dgvInventory.Size = new Size(967, 569);
             dgvInventory.TabIndex = 10;
+            dgvInventory.CellContentClick += dgvInventory_CellContentClick;
             // 
             // colInvName
             // 
-            dataGridViewCellStyle3.Format = "₱ #,##0.00";
-            dataGridViewCellStyle3.NullValue = null;
-            colInvName.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle2.Format = "₱ #,##0.00";
+            dataGridViewCellStyle2.NullValue = null;
+            colInvName.DefaultCellStyle = dataGridViewCellStyle2;
             colInvName.HeaderText = "Item Name ";
             colInvName.MinimumWidth = 6;
             colInvName.Name = "colInvName";
@@ -920,6 +965,7 @@
             btnInvSearch.TabIndex = 9;
             btnInvSearch.Text = "Search";
             btnInvSearch.UseVisualStyleBackColor = false;
+            btnInvSearch.Click += btnInvSearch_Click;
             // 
             // txtInvSearch
             // 
@@ -932,7 +978,7 @@
             // cmbInvFilterCategory
             // 
             cmbInvFilterCategory.FormattingEnabled = true;
-            cmbInvFilterCategory.Items.AddRange(new object[] { "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
+            cmbInvFilterCategory.Items.AddRange(new object[] { "All", "Rice", "Cooking Essentials", "Drinks", "Snacks/Foods", "Cleaning Essentials", "Packaging & Disposables" });
             cmbInvFilterCategory.Location = new Point(782, 84);
             cmbInvFilterCategory.Name = "cmbInvFilterCategory";
             cmbInvFilterCategory.Size = new Size(285, 28);
@@ -948,6 +994,7 @@
             btnInvFilterApply.TabIndex = 2;
             btnInvFilterApply.Text = "Show Only";
             btnInvFilterApply.UseVisualStyleBackColor = false;
+            btnInvFilterApply.Click += btnInvFilterApply_Click;
             // 
             // panel2
             // 
@@ -1025,40 +1072,6 @@
             materialTabControl1.Size = new Size(1349, 738);
             materialTabControl1.TabIndex = 0;
             // 
-            // colSLName
-            // 
-            dataGridViewCellStyle4.Format = "₱ #,##0.00";
-            dataGridViewCellStyle4.NullValue = null;
-            colSLName.DefaultCellStyle = dataGridViewCellStyle4;
-            colSLName.HeaderText = "Item Name ";
-            colSLName.MinimumWidth = 6;
-            colSLName.Name = "colSLName";
-            // 
-            // colSLItemsold
-            // 
-            colSLItemsold.HeaderText = "Item Sold";
-            colSLItemsold.MinimumWidth = 6;
-            colSLItemsold.Name = "colSLItemsold";
-            // 
-            // colSLCategory
-            // 
-            colSLCategory.HeaderText = "Category";
-            colSLCategory.MinimumWidth = 6;
-            colSLCategory.Name = "colSLCategory";
-            colSLCategory.Resizable = DataGridViewTriState.True;
-            // 
-            // colSlPrice
-            // 
-            colSlPrice.HeaderText = "Total Amount (₱)";
-            colSlPrice.MinimumWidth = 6;
-            colSlPrice.Name = "colSlPrice";
-            // 
-            // colSLDateTime
-            // 
-            colSLDateTime.HeaderText = "Time And Date:";
-            colSLDateTime.MinimumWidth = 6;
-            colSLDateTime.Name = "colSLDateTime";
-            // 
             // colTabName
             // 
             colTabName.FillWeight = 94.23874F;
@@ -1083,7 +1096,7 @@
             // colTabDate
             // 
             colTabDate.FillWeight = 99.77925F;
-            colTabDate.HeaderText = "Begin Date and Time ";
+            colTabDate.HeaderText = "Debt Date and Time Started ";
             colTabDate.MinimumWidth = 6;
             colTabDate.Name = "colTabDate";
             // 
@@ -1139,8 +1152,6 @@
         }
 
         #endregion
-        private ColumnHeader columnHeader3;
-        private ColumnHeader columnHeader4;
         private System.Windows.Forms.Timer SideBarTimer;
         private ImageList imageList1;
         private TabPage tabPage5;

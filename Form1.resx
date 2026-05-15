@@ -125,19 +125,19 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAEZTeXN0ZW0uV2luZG93cy5Gb3JtcywgQ3VsdHVyZT1uZXV0cmFs
         LCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5BQEAAAAmU3lzdGVtLldpbmRvd3MuRm9ybXMu
         SW1hZ2VMaXN0U3RyZWFtZXIBAAAABERhdGEHAgIAAAAJAwAAAA8DAAAAVBAAAAJNU0Z0AUkBTAIBAQUB
-        AAFQAQMBUAEDARABAAEQAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABQAMAASADAAEBAQABIAYAASAm
+        AAG4AQMBuAEDARABAAEQAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABQAMAASADAAEBAQABIAYAASAm
         AAMHAQkDXgHtAwAB/wMAAf8DQAH9AzgBXNwAAwcBCQQCBAADIwEyAwAB/wMAAf8DAAH/AwAB/wNJAYcI
         AAMGAQcEAcgAAxcBHwNbAcUDUAGdAzEBTgNYAbcDAAH/AwAB/wMAAf8DAAH/A1sB3gM5AV4DRAF7A1cB
         wgMvAUnIAANMAZADAAH/AwAB/wMAAf8DAAH/AwAB/wMAAf8DAAH/AwAB/wMAAf8DAAH/AwAB/wMAAf8D
         YAHoAw8BFMAAAw8BFANZAe8DAAH/AwAB/wMAAf8DAAH/AwAB/wMAAf8DAAH/AwAB/wMAAf8DAAH/AwAB
         /wMAAf8DAAH/A0gBhMAAA0cBggMAAf8DAAH/AwAB/wMAAf8DAAH/A1cBvAMyAU8DKwFBA0sBjQNaAfID
         AAH/AwAB/wMAAf8DAAH/A10BycAAAwYBBwNWAbUDAAH/AwAB/wMAAf8DYgHhAwcBCQgABAEDSwGNAwAB
-        /wMAAf8DAAH/A0gB9gMoATvEAAMKAQ0DQAH9AwAB/wMAAf8DSQGFEAADKwFBAwAB/wMAAf8DagH+AyMB
-        M8gAAxkBIgNAAf0DAAH/AwAB/wNOAZYQAAMxAU4DAAH/AwAB/wNqAf4DMwFRAwIBA8AAAywBQwNiAeED
-        AAH/AwAB/wMAAf8DYAHzAysBQQgAAwcBCQNXAbwDAAH/AwAB/wMAAf8DIQH7A0oBicAAA0QBegNqAf4D
+        /wMAAf8DAAH/A0gB9gMoATvEAAMKAQ0DQAH9AwAB/wMAAf8DSQGFEAADKwFBAwAB/wMAAf8DdwH+AyMB
+        M8gAAxkBIgNAAf0DAAH/AwAB/wNOAZYQAAMxAU4DAAH/AwAB/wN3Af4DMwFRAwIBA8AAAywBQwNiAeED
+        AAH/AwAB/wMAAf8DYAHzAysBQQgAAwcBCQNXAbwDAAH/AwAB/wMAAf8DIQH7A0oBicAAA0QBegN3Af4D
         AAH/AwAB/wMAAf8DAAH/A2AB8wNOAZYDSAGEA2IB4QMAAf8DAAH/AwAB/wMAAf8DAAH/A1kBw8AAAwUB
         BgNdAdEDAAH/AwAB/wMAAf8DAAH/AwAB/wMAAf8DAAH/AwAB/wMAAf8DAAH/AwAB/wMAAf8DAAH/AzYB
-        WMQAAzsBZQMAAf8DUwH0A1sB0wNRAfcDAAH/AwAB/wMAAf8DAAH/A2oB/gNfAdoDYAHoAwAB/wNZAbsD
+        WMQAAzsBZQMAAf8DUwH0A1sB0wNRAfcDAAH/AwAB/wMAAf8DAAH/A3cB/gNfAdoDYAHoAwAB/wNZAbsD
         AgEDxAADBQEGAzgBXAMeASoDCwEOAzsBYwMAAf8DAAH/AwAB/wMAAf8DUwGqAw0BEQMSARcDNAFTAxAB
         FdgAAxgBIAMAAf8DAAH/AwAB/wMAAf8DRAF57AADXAHWAwAB/wMAAf8DIQH7Ay4BR/8AHQADBAQFAQYD
         BQEGAwUBBgMFAQYDBQEGAwUBBgMFAQYDBQEGAwIBAxQAAw4BEgNJAYYDQQFyAz4BawNEAXkDBwEJOAAD
@@ -169,14 +169,14 @@
         /wMAAf8DYAHbAyoBQANeAeIDIQH7A0QBegQAA04BlQNbAcoDDAEPAyQBNQMkATUDJAE1AyQBNQMkATUD
         IwEzAzwBZgMhAfsDPQFnA1YBtQNeAe0EAQQAA04BlAMlATYEAQMTARkDNwFaAw0BEQNOAZQDWgHEAz4B
         awM9AWgDRQF8BAADRgGADAADAgEDA0YBfgQCBAEDJAE0A1wByAMmATkDVQGxA1YBtQMeASsIAAMjATID
-        EgEXCAADHQEoA1gBvQNBAfkDTwGbA0EBcgNgAfMDAAH/AwAB/wNqAf4DUgGjAz4BawNfAeUDXQHsAzQB
+        EgEXCAADHQEoA1gBvQNBAfkDTwGbA0EBcgNgAfMDAAH/AwAB/wN3Af4DUgGjAz4BawNfAeUDXQHsAzQB
         UwMCAQMEAANOAZUDWwHKAykBPgNdAd8DXQHfA10B3wNdAd8DXQHfA14B0gMfASwDAAH/A0EB+QNaAekD
         QwF3CAADQwF3Az8BbAMrAUEDBwEJA0IBdANEAXkDKwFBAzkBXgMHAQkDPQFoA0UBfAQAA0YBgBgAAzAB
         SwNMAZADSQGHA1wByANRAaEDPQFoA1IBqAMjATMYAAMHAQkDUwGpAysB/ANWAbIDOAFdA2AB6ANIAfYD
         UAGaA0QBeAMAAf8DAAH/A14B0gMLAQ4IAANOAZUDWwHKHAADGgEkA1oB8gNHAYIDPgFrAwIBAwgAAw4B
         EgNPAZsDSgGKAygBOwQCCAADOgFgAwgBCgM9AWkDRQF8BAADRgGAEAADDAEPAycBOgNTAakDTwGZA0wB
         kAMkATQDGQEiA1IBpQNAAXEDUQGkAyIBMQMMAQ8EARAAAwgBCgNBAXMDXAH4A1sB0AMtAUUDNQFVA1MB
-        pwNcAfgDagH+AwAB/wNeAdIDCwEOCAADTgGVA1sBygMNAREDUgGlA1kBuwNZAbsDWQG7A1gBugNGAX0D
+        pwNcAfgDdwH+AwAB/wNeAdIDCwEOCAADTgGVA1sBygMNAREDUgGlA1kBuwNZAbsDWQG7A1gBugNGAX0D
         GwEmA1oB8gMgAS4UAAMPARMDSQGGAz0BaAMyAU8DRwGCAxkBIwM8AWYDSgGKAy4BRwNFAXwEAAMpAT4I
         AAMVAR0DSAGEA0QBeQNSAaADHgErA0sBjANQAZwDGgEkAwYBCANKAYkDLQFFAyQBNANAAW8DQQFzA00B
         kgMrAUEQAAQCAzsBZANcAecDZQHxA1oBxAMrAfwDUAGcA1IBpQMAAf8DXgHSAwsBDggAA0wBjgNdAeoD
@@ -237,45 +237,6 @@
     <value>True</value>
   </metadata>
   <metadata name="colInvStocks.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colInvName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colInvCategory.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colInvPrice.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colInvStocks.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colSLName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colSLItemsold.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colSLCategory.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colSlPrice.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colSLDateTime.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colTabName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colTabBalance.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colTabStatus.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="colTabDate.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

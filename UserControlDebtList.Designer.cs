@@ -51,7 +51,6 @@
             colDlDate = new DataGridViewTextBoxColumn();
             colDlItem = new DataGridViewTextBoxColumn();
             colDlCategory = new DataGridViewTextBoxColumn();
-            colDlType = new DataGridViewComboBoxColumn();
             colDlAmount = new DataGridViewTextBoxColumn();
             colDlRunningBalance = new DataGridViewTextBoxColumn();
             panel18.SuspendLayout();
@@ -240,6 +239,7 @@
             btnDlAddItem.TabIndex = 1;
             btnDlAddItem.Text = "Add Item +";
             btnDlAddItem.UseVisualStyleBackColor = true;
+            btnDlAddItem.Click += btnDlAddItem_Click;
             // 
             // btnDlEditDebt
             // 
@@ -258,6 +258,7 @@
             btnDlDeleteDebt.TabIndex = 3;
             btnDlDeleteDebt.Text = "Delete Costumer Debt";
             btnDlDeleteDebt.UseVisualStyleBackColor = true;
+            btnDlDeleteDebt.Click += btnDlDeleteDebt_Click;
             // 
             // dgvDebtList
             // 
@@ -265,7 +266,7 @@
             dgvDebtList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvDebtList.BackgroundColor = SystemColors.ControlLightLight;
             dgvDebtList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvDebtList.Columns.AddRange(new DataGridViewColumn[] { colDlDate, colDlItem, colDlCategory, colDlType, colDlAmount, colDlRunningBalance });
+            dgvDebtList.Columns.AddRange(new DataGridViewColumn[] { colDlDate, colDlItem, colDlCategory, colDlAmount, colDlRunningBalance });
             dgvDebtList.Dock = DockStyle.Fill;
             dgvDebtList.GridColor = SystemColors.MenuText;
             dgvDebtList.Location = new Point(330, 121);
@@ -293,16 +294,6 @@
             colDlCategory.MinimumWidth = 6;
             colDlCategory.Name = "colDlCategory";
             colDlCategory.Resizable = DataGridViewTriState.True;
-            // 
-            // colDlType
-            // 
-            colDlType.FillWeight = 94.23874F;
-            colDlType.HeaderText = "Type";
-            colDlType.Items.AddRange(new object[] { "Debt", "Payment" });
-            colDlType.MinimumWidth = 6;
-            colDlType.Name = "colDlType";
-            colDlType.Resizable = DataGridViewTriState.True;
-            colDlType.SortMode = DataGridViewColumnSortMode.Automatic;
             // 
             // colDlAmount
             // 
@@ -365,7 +356,6 @@
         private DataGridViewTextBoxColumn colDlDate;
         private DataGridViewTextBoxColumn colDlItem;
         private DataGridViewTextBoxColumn colDlCategory;
-        private DataGridViewComboBoxColumn colDlType;
         private DataGridViewTextBoxColumn colDlAmount;
         private DataGridViewTextBoxColumn colDlRunningBalance;
     }
