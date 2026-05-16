@@ -17,43 +17,48 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger.Services
         // Search by Name
         public List<Product> SearchProducts(string searchTerm)
         {
-            // 1. Safety Check: If the search box is empty or null, return everything (or an empty list)
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
                 return _context.Products.ToList();
             }
 
-            // 2. Safe Query: Use null-checks for the database property and the input
             return _context.Products
-                .Where(p => p.Name != null &&
-                            p.Name.ToLower().Contains(searchTerm.ToLower()))
+                .Where(p => p.Name != null && p.Name.ToLower().Contains(searchTerm.ToLower()))
                 .ToList();
         }
 
         // Filter by Category
         public List<Product> GetProductsByCategory(string category)
         {
+            if (string.IsNullOrWhiteSpace(category))
+            {
+                return GetAllProducts();
+            }
+
             return _context.Products
-                .Where(p => p.Category == category)
+                .Where(p => p.Category != null && p.Category == category)
                 .ToList();
         }
 
-        // Logic to get all items for your dgvInventory
         public List<Product> GetAllProducts()
         {
             return _context.Products.ToList();
         }
 
-        // Logic to save a new item from your textboxes
         public void AddProduct(Product product)
         {
-            // Make sure this is "Products" to match your AppDbContext
+            if (product == null)
+            {
+                throw new System.ArgumentNullException(nameof(product), "Product cannot be null.");
+            }
+
             _context.Products.Add(product);
             _context.SaveChanges();
         }
+
         public void DeleteProduct(int id)
         {
-            var product = _context.Products.Find(id); // Find it in the database
+            var product = _context.Products.Find(id);
             if (product != null)
             {
                 _context.Products.Remove(product);
@@ -63,46 +68,104 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger.Services
 
         public void UpdateProduct(Product updatedProduct)
         {
+            if (updatedProduct == null)
+            {
+                throw new System.ArgumentNullException(nameof(updatedProduct), "Updated product cannot be null.");
+            }
+
             _context.Products.Update(updatedProduct);
             _context.SaveChanges();
         }
 
         public (bool Success, string Message) SubtractStock(string itemName, int quantity)
         {
-            // 1. Get the list from the database first
-            var allProducts = _context.Products.ToList();
-
-            // 2. Find the product ignoring spaces and capitalization
-            // 1. Ensure the list itself isn't null before searching
-            if (allProducts == null)
+            // Validate parameters
+            if (string.IsNullOrWhiteSpace(itemName))
             {
-                return (false, "Inventory list is unavailable.");
+                return (false, "Item name cannot be null or empty.");
             }
 
-            // 2. Perform the search
-            var product = allProducts.FirstOrDefault(p =>
-                p.Name != null && // Extra safety check for the Name property itself
-                p.Name.Trim().Equals(itemName.Trim(), StringComparison.OrdinalIgnoreCase));
-
-            // 3. The "Safe Check" for the result (Fixes Warning CS8602)
-            if (product == null)
+            if (quantity <= 0)
             {
-                return (false, "Product not found!");
+                return (false, "Quantity must be greater than zero.");
             }
 
-            // Now C# knows for a fact 'product' is not null, so this is safe:
-            product.Stocks -= quantity;
+            // Clean the input
+            string cleanedName = itemName.Trim();
+
+            // FIX: Use ToLower() instead of StringComparison
+            var product = _context.Products
+                .FirstOrDefault(p => p.Name != null && p.Name.ToLower() == cleanedName.ToLower());
 
             if (product == null)
-                return (false, "Product not found!"); // This is what you see now
+            {
+                return (false, $"Product '{itemName}' not found in inventory!");
+            }
 
             if (product.Stocks < quantity)
-                return (false, "Not enough stock!");
+            {
+                return (false, $"Not enough stock! Only {product.Stocks} {product.Name}(s) remaining.");
+            }
 
             product.Stocks -= quantity;
             _context.SaveChanges();
 
-            return (true, "");
+            string message = product.Stocks == 0 ?
+                $"Warning: {product.Name} is now out of stock!" :
+                $"Successfully deducted {quantity} {product.Name}(s). {product.Stocks} remaining.";
+
+            return (true, message);
+        }
+
+        public (bool Success, string Message) AddStock(string itemName, int quantity)
+        {
+            if (string.IsNullOrWhiteSpace(itemName))
+            {
+                return (false, "Item name cannot be null or empty.");
+            }
+
+            if (quantity <= 0)
+            {
+                return (false, "Quantity must be greater than zero.");
+            }
+
+            string cleanedName = itemName.Trim();
+
+            var product = _context.Products
+                .FirstOrDefault(p => p.Name != null && p.Name.ToLower() == cleanedName.ToLower());
+
+            if (product == null)
+            {
+                return (false, $"Product '{itemName}' not found in inventory!");
+            }
+
+            product.Stocks += quantity;
+            _context.SaveChanges();
+
+            return (true, $"Added {quantity} {product.Name}(s). New stock: {product.Stocks}");
+        }
+
+        public bool ProductExists(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return false;
+            }
+
+            string cleanedName = name.Trim();
+            return _context.Products.Any(p => p.Name != null && p.Name.ToLower() == cleanedName.ToLower());
+        }
+
+        public Product GetProductByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
+            string cleanedName = name.Trim();
+            return _context.Products
+                .FirstOrDefault(p => p.Name != null && p.Name.ToLower() == cleanedName.ToLower());
         }
     }
 }

@@ -23,8 +23,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             imageList1 = new ImageList(components);
             SideBarTimer = new System.Windows.Forms.Timer(components);
             tabPage5 = new TabPage();
@@ -33,6 +33,10 @@
             tabPage4 = new TabPage();
             panel17 = new Panel();
             dgvTabLedger = new DataGridView();
+            colTabName = new DataGridViewTextBoxColumn();
+            colTabBalance = new DataGridViewTextBoxColumn();
+            colTabStatus = new DataGridViewTextBoxColumn();
+            colTabDate = new DataGridViewTextBoxColumn();
             panel16 = new Panel();
             BtnVCDL = new Button();
             materialCard3 = new MaterialSkin.Controls.MaterialCard();
@@ -114,10 +118,6 @@
             panel12 = new Panel();
             panel8 = new Panel();
             materialTabControl1 = new MaterialSkin.Controls.MaterialTabControl();
-            colTabName = new DataGridViewTextBoxColumn();
-            colTabBalance = new DataGridViewTextBoxColumn();
-            colTabStatus = new DataGridViewTextBoxColumn();
-            colTabDate = new DataGridViewTextBoxColumn();
             tabPage5.SuspendLayout();
             tabPage4.SuspendLayout();
             panel17.SuspendLayout();
@@ -228,6 +228,34 @@
             dgvTabLedger.Size = new Size(959, 573);
             dgvTabLedger.TabIndex = 0;
             // 
+            // colTabName
+            // 
+            colTabName.FillWeight = 94.23874F;
+            colTabName.HeaderText = "Costumer Name";
+            colTabName.MinimumWidth = 6;
+            colTabName.Name = "colTabName";
+            // 
+            // colTabBalance
+            // 
+            colTabBalance.FillWeight = 101.558464F;
+            colTabBalance.HeaderText = "Active Balance";
+            colTabBalance.MinimumWidth = 6;
+            colTabBalance.Name = "colTabBalance";
+            // 
+            // colTabStatus
+            // 
+            colTabStatus.FillWeight = 104.423553F;
+            colTabStatus.HeaderText = "Debt Status";
+            colTabStatus.MinimumWidth = 6;
+            colTabStatus.Name = "colTabStatus";
+            // 
+            // colTabDate
+            // 
+            colTabDate.FillWeight = 99.77925F;
+            colTabDate.HeaderText = "Debt Date and Time Started ";
+            colTabDate.MinimumWidth = 6;
+            colTabDate.Name = "colTabDate";
+            // 
             // panel16
             // 
             panel16.BorderStyle = BorderStyle.Fixed3D;
@@ -303,6 +331,7 @@
             btnTabEditCustomer.TabIndex = 4;
             btnTabEditCustomer.Text = "Edit Customer Info";
             btnTabEditCustomer.UseVisualStyleBackColor = true;
+            btnTabEditCustomer.Click += btnTabEditCustomer_Click;
             // 
             // btnTabDeleteCustomer
             // 
@@ -312,6 +341,7 @@
             btnTabDeleteCustomer.TabIndex = 3;
             btnTabDeleteCustomer.Text = "Delete Customer Info";
             btnTabDeleteCustomer.UseVisualStyleBackColor = true;
+            btnTabDeleteCustomer.Click += btnTabDeleteCustomer_Click;
             // 
             // panel18
             // 
@@ -333,11 +363,12 @@
             btnTabSearch.TabIndex = 18;
             btnTabSearch.Text = "Search";
             btnTabSearch.UseVisualStyleBackColor = true;
+            btnTabSearch.Click += btnTabSearch_Click;
             // 
             // cmbTabFilterStatus
             // 
             cmbTabFilterStatus.FormattingEnabled = true;
-            cmbTabFilterStatus.Items.AddRange(new object[] { "All", "Active", "Settled" });
+            cmbTabFilterStatus.Items.AddRange(new object[] { "All", "Unpaid", "Settled" });
             cmbTabFilterStatus.Location = new Point(751, 80);
             cmbTabFilterStatus.Name = "cmbTabFilterStatus";
             cmbTabFilterStatus.Size = new Size(234, 28);
@@ -554,9 +585,9 @@
             // 
             // colSLName
             // 
-            dataGridViewCellStyle1.Format = "₱ #,##0.00";
-            dataGridViewCellStyle1.NullValue = null;
-            colSLName.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Format = "₱ #,##0.00";
+            dataGridViewCellStyle3.NullValue = null;
+            colSLName.DefaultCellStyle = dataGridViewCellStyle3;
             colSLName.HeaderText = "Item Name ";
             colSLName.MinimumWidth = 6;
             colSLName.Name = "colSLName";
@@ -890,9 +921,9 @@
             // 
             // colInvName
             // 
-            dataGridViewCellStyle2.Format = "₱ #,##0.00";
-            dataGridViewCellStyle2.NullValue = null;
-            colInvName.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Format = "₱ #,##0.00";
+            dataGridViewCellStyle4.NullValue = null;
+            colInvName.DefaultCellStyle = dataGridViewCellStyle4;
             colInvName.HeaderText = "Item Name ";
             colInvName.MinimumWidth = 6;
             colInvName.Name = "colInvName";
@@ -1072,34 +1103,6 @@
             materialTabControl1.Size = new Size(1349, 738);
             materialTabControl1.TabIndex = 0;
             // 
-            // colTabName
-            // 
-            colTabName.FillWeight = 94.23874F;
-            colTabName.HeaderText = "Costumer Name";
-            colTabName.MinimumWidth = 6;
-            colTabName.Name = "colTabName";
-            // 
-            // colTabBalance
-            // 
-            colTabBalance.FillWeight = 101.558464F;
-            colTabBalance.HeaderText = "Active Balance";
-            colTabBalance.MinimumWidth = 6;
-            colTabBalance.Name = "colTabBalance";
-            // 
-            // colTabStatus
-            // 
-            colTabStatus.FillWeight = 104.423553F;
-            colTabStatus.HeaderText = "Debt Status";
-            colTabStatus.MinimumWidth = 6;
-            colTabStatus.Name = "colTabStatus";
-            // 
-            // colTabDate
-            // 
-            colTabDate.FillWeight = 99.77925F;
-            colTabDate.HeaderText = "Debt Date and Time Started ";
-            colTabDate.MinimumWidth = 6;
-            colTabDate.Name = "colTabDate";
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -1195,11 +1198,7 @@
         private Panel panel17;
         private Panel panel16;
         private Panel panel18;
-        private DataGridView dgvTabLedger;
-        private DataGridViewTextBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column3;
-        private DataGridViewTextBoxColumn Column4;
-        private DataGridViewTextBoxColumn Column5;
+        private DataGridView dgvTabLedger;       
         private TextBox txtTabCustomerName;
         private ComboBox cmbTabFilterStatus;
         private TextBox txtTabSearchName;

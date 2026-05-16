@@ -38,6 +38,9 @@
             buttonReturn = new Button();
             buttonSave = new Button();
             materialCard3 = new MaterialSkin.Controls.MaterialCard();
+            btnPaydebt = new Button();
+            label1 = new Label();
+            textPaidAmount = new TextBox();
             label7 = new Label();
             cmbDlCategory = new ComboBox();
             label8 = new Label();
@@ -163,6 +166,9 @@
             // materialCard3
             // 
             materialCard3.BackColor = Color.FromArgb(255, 255, 255);
+            materialCard3.Controls.Add(btnPaydebt);
+            materialCard3.Controls.Add(label1);
+            materialCard3.Controls.Add(textPaidAmount);
             materialCard3.Controls.Add(label7);
             materialCard3.Controls.Add(cmbDlCategory);
             materialCard3.Controls.Add(label8);
@@ -180,6 +186,32 @@
             materialCard3.Padding = new Padding(14);
             materialCard3.Size = new Size(244, 420);
             materialCard3.TabIndex = 5;
+            // 
+            // btnPaydebt
+            // 
+            btnPaydebt.Location = new Point(58, 336);
+            btnPaydebt.Name = "btnPaydebt";
+            btnPaydebt.Size = new Size(120, 29);
+            btnPaydebt.TabIndex = 15;
+            btnPaydebt.Text = "Pay Debt";
+            btnPaydebt.UseVisualStyleBackColor = true;
+            btnPaydebt.Click += btnPaydebt_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(19, 280);
+            label1.Name = "label1";
+            label1.Size = new Size(98, 20);
+            label1.TabIndex = 14;
+            label1.Text = "Paid Amount ";
+            // 
+            // textPaidAmount
+            // 
+            textPaidAmount.Location = new Point(19, 303);
+            textPaidAmount.Name = "textPaidAmount";
+            textPaidAmount.Size = new Size(208, 27);
+            textPaidAmount.TabIndex = 13;
             // 
             // label7
             // 
@@ -204,9 +236,9 @@
             label8.AutoSize = true;
             label8.Location = new Point(17, 159);
             label8.Name = "label8";
-            label8.Size = new Size(66, 20);
+            label8.Size = new Size(102, 20);
             label8.TabIndex = 10;
-            label8.Text = "Amount ";
+            label8.Text = "Price Amount ";
             // 
             // txtDlAmount
             // 
@@ -233,7 +265,7 @@
             // 
             // btnDlAddItem
             // 
-            btnDlAddItem.Location = new Point(56, 334);
+            btnDlAddItem.Location = new Point(58, 236);
             btnDlAddItem.Name = "btnDlAddItem";
             btnDlAddItem.Size = new Size(120, 29);
             btnDlAddItem.TabIndex = 1;
@@ -358,5 +390,8 @@
         private DataGridViewTextBoxColumn colDlCategory;
         private DataGridViewTextBoxColumn colDlAmount;
         private DataGridViewTextBoxColumn colDlRunningBalance;
+        private Button btnPaydebt;
+        private Label label1;
+        private TextBox textPaidAmount;
     }
 }

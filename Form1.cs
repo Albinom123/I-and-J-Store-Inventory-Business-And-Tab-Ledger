@@ -6,35 +6,31 @@ using MaterialSkin.Controls;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 {
     public partial class Form1 : MaterialForm
     {
-        // FIX: Ensure the variable name matches your service file
-        private readonly InventoryService _inventoryService;
+        private readonly InventoryService _inventoryService;
         private readonly SalesService _salesService;
         private readonly AppDbContext _context;
 
         public Form1()
         {
             InitializeComponent();
+
             using (var db = new AppDbContext())
             {
                 db.Database.EnsureCreated(); // Creates the .db file if it's missing
-            }
+            }
 
-            // THIS IS THE MISSING PIECE:
-            _context = new AppDbContext();
+            _context = new AppDbContext();
+            _context.Database.EnsureCreated();
 
-            // Now that _context is NOT null, we make sure the DB exists
-            _context.Database.EnsureCreated();
-
-            // Now this won't crash anymore!
-            
-            // MaterialSkin Setup
-            var msm = MaterialSkinManager.Instance;
+            // MaterialSkin Setup
+            var msm = MaterialSkinManager.Instance;
             msm.AddFormToManage(this);
             msm.Theme = MaterialSkinManager.Themes.LIGHT;
             msm.ColorScheme = new ColorScheme(
@@ -44,48 +40,69 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
               Color.FromArgb(255, 215, 0),
               TextShade.WHITE
             );
+
             labelSL.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
             labelSL.ForeColor = Color.FromArgb(153, 101, 21);
-
 
             labelInv.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
             labelInv.ForeColor = Color.FromArgb(153, 101, 21);
 
-
             labelTL.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
             labelTL.ForeColor = Color.FromArgb(153, 101, 21);
 
-            // FIX: Initialize the service to stop "Context" errors
-            _inventoryService = new InventoryService(new AppDbContext());
+            // Initialize Services
+            _inventoryService = new InventoryService(new AppDbContext());
             _salesService = new SalesService(new AppDbContext());
-            _context = new AppDbContext(); // Initialize it here
 
-            LoadInventoryData();
+            // Load ALL grids right here on startup
+            LoadInventoryData();
+            LoadSalesData();
+            RefreshTabLedgerGrid();
+
+            // Attach the tab change event dynamically to handle updates on tab-switch
+            if (materialTabControl1 != null)
+            {
+                materialTabControl1.SelectedIndexChanged += MaterialTabControl1_SelectedIndexChanged;
+            }
         }
 
+        // Real-Time Sync Trigger: Automatically pulls data fresh from SQLite whenever you change tabs
+        private void MaterialTabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadInventoryData();
+            LoadSalesData();
+            RefreshTabLedgerGrid();
+        }
 
         private void LoadInventoryData()
         {
             var data = _inventoryService.GetAllProducts();
 
-            // FIX: Stop double columns
-            dgvInventory.AutoGenerateColumns = false;
+            dgvInventory.DataSource = null; // Flush cache binding
+            dgvInventory.AutoGenerateColumns = false;
 
-            // FIX: Link Designer columns to Database properties
-            dgvInventory.Columns["colInvName"].DataPropertyName = "Name";
-            dgvInventory.Columns["colInvCategory"].DataPropertyName = "Category";
-            dgvInventory.Columns["colInvPrice"].DataPropertyName = "Price";
-            dgvInventory.Columns["colInvStocks"].DataPropertyName = "Stocks";
+            // Check if columns exist before setting DataPropertyName
+            if (dgvInventory.Columns.Contains("colInvName"))
+                dgvInventory.Columns["colInvName"].DataPropertyName = "Name";
+
+            if (dgvInventory.Columns.Contains("colInvCategory"))
+                dgvInventory.Columns["colInvCategory"].DataPropertyName = "Category";
+
+            if (dgvInventory.Columns.Contains("colInvPrice"))
+                dgvInventory.Columns["colInvPrice"].DataPropertyName = "Price";
+
+            if (dgvInventory.Columns.Contains("colInvStocks"))
+                dgvInventory.Columns["colInvStocks"].DataPropertyName = "Stocks";
 
             dgvInventory.DataSource = data;
 
-            // Header Formatting
-            dgvInventory.Columns["colInvName"].HeaderText = "Item Name";
+            dgvInventory.Columns["colInvName"].HeaderText = "Item Name";
             dgvInventory.Columns["colInvCategory"].HeaderText = "Category";
             dgvInventory.Columns["colInvPrice"].HeaderText = "Prices (₱)";
             dgvInventory.Columns["colInvStocks"].HeaderText = "Stocks";
 
-            if (dgvInventory.Columns["Id"] != null) dgvInventory.Columns["Id"].Visible = false;
+            if (dgvInventory.Columns["Id"] != null)
+                dgvInventory.Columns["Id"].Visible = false;
         }
 
         private void btnInvAddItem_Click(object sender, EventArgs e)
@@ -105,6 +122,10 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 LoadInventoryData();
                 ClearInvFields();
             }
+            else
+            {
+                MessageBox.Show("Please enter valid price and stock values.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void ClearInvFields()
@@ -119,13 +140,11 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
         {
             if (e.RowIndex >= 0)
             {
-                // Get the Product object from the clicked row
-                var product = (Product)dgvInventory.Rows[e.RowIndex].DataBoundItem;
+                var product = (Product)dgvInventory.Rows[e.RowIndex].DataBoundItem;
 
                 if (product != null)
                 {
-                    // Fill the textboxes with the selected item's info
-                    txtInvItemName.Text = product.Name;
+                    txtInvItemName.Text = product.Name;
                     cmbInvCategory.Text = product.Category;
                     txtInvItemPrice.Text = product.Price.ToString();
                     txtInvItemStocks.Text = product.Stocks.ToString();
@@ -137,17 +156,14 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
         {
             if (dgvInventory.CurrentRow != null)
             {
-                // Get the specific product from the grid
-                var product = (Product)dgvInventory.CurrentRow.DataBoundItem;
+                var product = (Product)dgvInventory.CurrentRow.DataBoundItem;
 
-                var result = MessageBox.Show($"Delete {product.Name}?", "Confirm", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show($"Delete {product.Name}?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
-                    // Use the Service to delete by ID
-                    _inventoryService.DeleteProduct(product.Id);
-
-                    LoadInventoryData(); // Refresh the list
-                    ClearInvFields();
+                    _inventoryService.DeleteProduct(product.Id);
+                    LoadInventoryData();
+                    ClearInvFields();
                 }
             }
         }
@@ -158,8 +174,7 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             {
                 var product = (Product)dgvInventory.CurrentRow.DataBoundItem;
 
-                // Update the object with your new textbox info
-                product.Name = txtInvItemName.Text;
+                product.Name = txtInvItemName.Text;
                 product.Category = cmbInvCategory.Text;
 
                 if (decimal.TryParse(txtInvItemPrice.Text, out decimal price) &&
@@ -168,221 +183,215 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                     product.Price = price;
                     product.Stocks = stocks;
 
-                    _inventoryService.UpdateProduct(product); // Save changes
-                    LoadInventoryData();
+                    _inventoryService.UpdateProduct(product);
+                    LoadInventoryData();
                     ClearInvFields();
-                    MessageBox.Show("Item updated!");
+                    MessageBox.Show("Item updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
 
         private void btnInvSearch_Click(object sender, EventArgs e)
         {
-            string term = txtInvSearch.Text.Trim(); // Replace with your actual TextBox name
+            string term = txtInvSearch.Text.Trim();
 
-            if (!string.IsNullOrEmpty(term))
+            if (!string.IsNullOrEmpty(term))
             {
                 var filteredData = _inventoryService.SearchProducts(term);
                 dgvInventory.DataSource = filteredData;
             }
             else
             {
-                LoadInventoryData(); // Show everything if search is empty
-            }
+                LoadInventoryData();
+            }
         }
 
         private void btnInvFilterApply_Click(object sender, EventArgs e)
         {
-            // 1. Get the selected category safely
-            // Using SelectedItem?.ToString() is safer than .Text for ComboBoxes
-            string selectedCategory = cmbInvFilterCategory.SelectedItem?.ToString() ?? string.Empty;
+            string selectedCategory = cmbInvFilterCategory.SelectedItem?.ToString() ?? string.Empty;
 
-            // 2. Handle "All", "Categories" (placeholder), or Empty selection
-            // This allows the user to reset the view to show everything
-            if (string.IsNullOrEmpty(selectedCategory) ||
-        selectedCategory == "All" ||
-        selectedCategory == "Categories")
+            if (string.IsNullOrEmpty(selectedCategory) || selectedCategory == "All" || selectedCategory == "Categories")
             {
-                dgvInventory.DataSource = null; // Prevent doubling columns
-                dgvInventory.AutoGenerateColumns = false;
-                LoadInventoryData(); // Resets the grid
-                return;
+                LoadInventoryData();
+                return;
             }
 
-            // 3. Filter the inventory data
-            // We call the service and ensure the result isn't null
-            var filteredData = _inventoryService.GetProductsByCategory(selectedCategory) ?? new List<Product>();
+            var filteredData = _inventoryService.GetProductsByCategory(selectedCategory) ?? new List<Product>();
 
-            // 4. Update the Grid safely
-            dgvInventory.DataSource = null;
-            dgvInventory.AutoGenerateColumns = false;
+            dgvInventory.DataSource = null;
             dgvInventory.DataSource = filteredData;
 
-            // 5. Notify if the category is empty
-            if (filteredData.Count == 0)
+            if (filteredData.Count == 0)
             {
-                MessageBox.Show($"No inventory items found under '{selectedCategory}'.", "Empty Category");
+                MessageBox.Show($"No inventory items found under '{selectedCategory}'.", "Empty Category", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        //////////////////////////////////////////////////////////////////////////
+        // SALES LEDGER METHODS
+        //////////////////////////////////////////////////////////////////////////
 
         private void SetupSalesGridColumns()
         {
             dgvSalesLedger.Columns.Clear();
             dgvSalesLedger.AutoGenerateColumns = false;
 
-            // Create the columns manually
-            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colName", HeaderText = "Item Name", DataPropertyName = "ItemName" });
-            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSold", HeaderText = "Item Sold", DataPropertyName = "ItemSold" });
-            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCat", HeaderText = "Category", DataPropertyName = "Category" });
-            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colPrice", HeaderText = "Total Amount (₱)", DataPropertyName = "TotalAmount" });
-            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colDate", HeaderText = "Time and Date", DataPropertyName = "TimeAndDate" });
+            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSLName", HeaderText = "Item Name", DataPropertyName = "ItemName" });
+            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSLItemsold", HeaderText = "Item Sold", DataPropertyName = "ItemSold" });
+            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSLCategory", HeaderText = "Category", DataPropertyName = "Category" });
+            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSlPrice", HeaderText = "Total Amount (₱)", DataPropertyName = "TotalAmount" });
+            dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSLDateTime", HeaderText = "Time and Date", DataPropertyName = "TimeAndDate" });
         }
+
         private void btnSlAddItem_Click(object sender, EventArgs e)
         {
-            string itemName = txtSlItemName.Text?.Trim() ?? string.Empty;
+            if (sender is Button btn) btn.Enabled = false;
 
-            if (string.IsNullOrWhiteSpace(itemName))
+            try
             {
-                MessageBox.Show("Please enter an item name.");
-                return;
-            }
+                string itemName = txtSlItemName.Text?.Trim() ?? string.Empty;
 
-            var inventoryItem = _inventoryService.GetAllProducts()
-              .FirstOrDefault(p => p.Name != null && p.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
-
-            if (inventoryItem == null)
-            {
-                MessageBox.Show("This item doesn't exist in your Inventory.");
-                return;
-            }
-
-            if (decimal.TryParse(txtSlItemPrice.Text, out decimal totalInput))
-            {
-                if (inventoryItem.Price <= 0)
+                if (string.IsNullOrWhiteSpace(itemName))
                 {
-                    MessageBox.Show("Inventory price is 0. Please update the price first.");
+                    MessageBox.Show("Please enter an item name.", "Input Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                int quantitySold = (int)(totalInput / inventoryItem.Price);
+                string searchName = itemName.ToLower();
+                var inventoryItem = _inventoryService.GetAllProducts()
+                  .FirstOrDefault(p => p.Name != null && p.Name.Trim().ToLower() == searchName);
 
-                if (quantitySold <= 0)
+                if (inventoryItem == null)
                 {
-                    MessageBox.Show("The amount entered is less than the price of a single item.");
+                    MessageBox.Show("This item doesn't exist in your Inventory.", "Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Subtract stock and get the result
-                var stockResult = _inventoryService.SubtractStock(itemName, quantitySold);
-
-                // FIXED: Removed 'stockResult != null' because Tuples cannot be null
-                if (stockResult.Success)
+                if (decimal.TryParse(txtSlItemPrice.Text, out decimal totalInput))
                 {
-                    var newSale = new Sale
+                    if (inventoryItem.Price <= 0)
                     {
-                        ItemName = inventoryItem.Name ?? "Unknown Item",
-                        Category = inventoryItem.Category ?? "Uncategorized",
-                        ItemSold = quantitySold,
-                        TotalAmount = totalInput,
-                        TimeAndDate = DateTime.Now
-                    };
+                        MessageBox.Show("Inventory price is 0. Please update the price first.", "Price Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
 
-                    _salesService.AddSale(newSale);
-                    LoadSalesData();
-                    LoadInventoryData();
-                    ClearSlFields();
+                    int quantitySold = (int)(totalInput / inventoryItem.Price);
 
-                    if (!string.IsNullOrEmpty(stockResult.Message))
+                    if (quantitySold <= 0)
                     {
-                        MessageBox.Show(stockResult.Message, "Stock Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("The amount entered is less than the price of a single item.", "Quantity Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (inventoryItem.Stocks < quantitySold)
+                    {
+                        MessageBox.Show($"Insufficient stock available! Only {inventoryItem.Stocks} remaining.", "Stock Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    var stockResult = _inventoryService.SubtractStock(inventoryItem.Name, quantitySold);
+
+                    if (stockResult.Success)
+                    {
+                        var newSale = new Sale
+                        {
+                            ItemName = inventoryItem.Name ?? "Unknown Item",
+                            Category = inventoryItem.Category ?? "Uncategorized",
+                            ItemSold = quantitySold,
+                            TotalAmount = totalInput,
+                            TimeAndDate = DateTime.Now
+                        };
+
+                        _salesService.AddSale(newSale);
+                        LoadSalesData();
+                        LoadInventoryData();
+                        ClearSlFields();
+
+                        if (!string.IsNullOrEmpty(stockResult.Message))
+                        {
+                            MessageBox.Show(stockResult.Message, "Stock Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
+                        MessageBox.Show("Sale recorded successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(stockResult.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    // FIXED: Removed stockResult?.Message because stockResult is a ValueType
-                    MessageBox.Show(stockResult.Message);
+                    MessageBox.Show("Please enter a valid Total Amount.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-            else
+            finally
             {
-                MessageBox.Show("Please enter a valid Total Amount.");
+                if (sender is Button buttonControl) buttonControl.Enabled = true;
             }
         }
 
         private void LoadSalesData()
         {
-            // 1. Completely detach the data first
-            dgvSalesLedger.DataSource = null;
+            using (var context = new AppDbContext())
+            {
+                dgvSalesLedger.DataSource = null;
+                dgvSalesLedger.AutoGenerateColumns = false;
 
-            // 2. Ensure AutoGenerate is OFF right before mapping
-            dgvSalesLedger.AutoGenerateColumns = false;
+                if (dgvSalesLedger.Columns.Count == 0)
+                {
+                    SetupSalesGridColumns();
+                }
 
-            // 3. Double-check these property names against your Sale.cs file
-            // These MUST match the public properties (e.g., public string ItemName)
-            if (dgvSalesLedger.Columns.Contains("colSLName"))
-                dgvSalesLedger.Columns["colSLName"].DataPropertyName = "ItemName";
+                if (dgvSalesLedger.Columns.Contains("colSLName"))
+                    dgvSalesLedger.Columns["colSLName"].DataPropertyName = "ItemName";
 
-            if (dgvSalesLedger.Columns.Contains("colSLItemsold"))
-                dgvSalesLedger.Columns["colSLItemsold"].DataPropertyName = "ItemSold";
+                if (dgvSalesLedger.Columns.Contains("colSLItemsold"))
+                    dgvSalesLedger.Columns["colSLItemsold"].DataPropertyName = "ItemSold";
 
-            if (dgvSalesLedger.Columns.Contains("colSLCategory"))
-                dgvSalesLedger.Columns["colSLCategory"].DataPropertyName = "Category";
+                if (dgvSalesLedger.Columns.Contains("colSLCategory"))
+                    dgvSalesLedger.Columns["colSLCategory"].DataPropertyName = "Category";
 
-            if (dgvSalesLedger.Columns.Contains("colSlPrice"))
-                dgvSalesLedger.Columns["colSlPrice"].DataPropertyName = "TotalAmount";
+                if (dgvSalesLedger.Columns.Contains("colSlPrice"))
+                    dgvSalesLedger.Columns["colSlPrice"].DataPropertyName = "TotalAmount";
 
-            if (dgvSalesLedger.Columns.Contains("colSLDateTime"))
-                dgvSalesLedger.Columns["colSLDateTime"].DataPropertyName = "TimeAndDate";
+                if (dgvSalesLedger.Columns.Contains("colSLDateTime"))
+                    dgvSalesLedger.Columns["colSLDateTime"].DataPropertyName = "TimeAndDate";
 
-            // 4. Finally, grab the list from the service
-            var salesList = _salesService.GetAllSales();
-            dgvSalesLedger.DataSource = salesList;
+                var salesList = context.Sales.OrderByDescending(s => s.TimeAndDate).ToList();
+                dgvSalesLedger.DataSource = salesList;
+            }
         }
 
         private void btnSlDeleteItem_Click(object sender, EventArgs e)
         {
-            // 1. Safe Selection Check
-            // This safely checks if a row is selected and if it's actually a 'Sale' object
-            if (dgvSalesLedger.CurrentRow?.DataBoundItem is Sale sale)
+            if (dgvSalesLedger.CurrentRow?.DataBoundItem is Sale sale)
             {
                 var confirm = MessageBox.Show($"Delete sale record for {sale.ItemName}? Stocks will be returned to Inventory.",
-                               "Confirm Recovery", MessageBoxButtons.YesNo);
+                               "Confirm Recovery", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (confirm == DialogResult.Yes)
                 {
-                    // 2. Safe Inventory Lookup
-                    // Using ?. and checking for null Name to prevent crashes
-                    var product = _inventoryService.GetAllProducts()
-                 .FirstOrDefault(p => p.Name != null &&
-                 p.Name.Equals(sale.ItemName, StringComparison.OrdinalIgnoreCase));
+                    var product = _inventoryService.GetAllProducts()
+                                 .FirstOrDefault(p => p.Name != null && p.Name.Equals(sale.ItemName, StringComparison.OrdinalIgnoreCase));
 
                     if (product != null)
                     {
-                        product.Stocks += sale.ItemSold; // Give the items back
-                        _inventoryService.UpdateProduct(product); // Save inventory change
-                    }
-                    else
-                    {
-                        // Optional: Notify user if the stock couldn't be returned
-                        MessageBox.Show("Note: Item no longer exists in Inventory. Record deleted without stock recovery.");
+                        product.Stocks += sale.ItemSold;
+                        _inventoryService.UpdateProduct(product);
                     }
 
-                    // 3. Delete the record
-                    _salesService.DeleteSale(sale.Id);
-
-                    // 4. Refresh both views
-                    LoadSalesData();
+                    _salesService.DeleteSale(sale.Id);
+                    LoadSalesData();
                     LoadInventoryData();
+                    MessageBox.Show("Sale record deleted and stock restored.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
             {
-                MessageBox.Show("Please select a sale record to delete.");
+                MessageBox.Show("Please select a sale record to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
         private void ClearSlFields()
         {
             txtSlItemName.Clear();
@@ -392,32 +401,26 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
         private void btnSlEditItem_Click(object sender, EventArgs e)
         {
-            // 1. Ensure a row is selected
-            if (dgvSalesLedger.CurrentRow?.DataBoundItem is Sale saleToUpdate)
+            if (dgvSalesLedger.CurrentRow?.DataBoundItem is Sale saleToUpdate)
             {
-                // 2. Update the object with the NEW info from the textboxes
-                saleToUpdate.ItemName = txtSlItemName.Text.Trim();
+                saleToUpdate.ItemName = txtSlItemName.Text.Trim();
                 saleToUpdate.Category = cmbSlCategory.Text;
 
                 if (decimal.TryParse(txtSlItemPrice.Text, out decimal newPrice))
                 {
                     saleToUpdate.TotalAmount = newPrice;
+                    _salesService.UpdateSale(saleToUpdate);
 
-                    // 3. Save to database via your service
-                    _salesService.UpdateSale(saleToUpdate);
-
-                    // 4. Refresh and Clear
-                    LoadSalesData();
+                    LoadSalesData();
                     ClearSlFields();
-                    MessageBox.Show("Changes saved successfully!");
+                    MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a valid price.");
+                    MessageBox.Show("Please enter a valid price.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
-
 
         private void dgvSalesLedger_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -428,199 +431,374 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 {
                     txtSlItemName.Text = sale.ItemName;
                     cmbSlCategory.Text = sale.Category;
-
-                    // We show the Total Amount in the price box for editing
-                    txtSlItemPrice.Text = sale.TotalAmount.ToString();
-                    dgvSalesLedger_CellClick(sender, e);
-                    MessageBox.Show("Ready to edit! Change the price and click 'Edit Item'.");
-
-                    // The date is purely for reference here as it updates on Save
-                }
+                    txtSlItemPrice.Text = sale.TotalAmount.ToString();
+                }
             }
         }
+
         private void dgvSalesLedger_SelectionChanged(object sender, EventArgs e)
         {
-            // 1. Check if a row is actually selected
-            if (dgvSalesLedger.CurrentRow != null && dgvSalesLedger.CurrentRow.DataBoundItem is Sale selectedSale)
+            if (dgvSalesLedger.CurrentRow != null && dgvSalesLedger.CurrentRow.DataBoundItem is Sale selectedSale)
             {
-                // 2. Safely fill the textboxes and combo box
-                txtSlItemName.Text = selectedSale.ItemName;
+                txtSlItemName.Text = selectedSale.ItemName;
                 cmbSlCategory.Text = selectedSale.Category;
-
-                // 3. Fill the price (Total Amount)
-                txtSlItemPrice.Text = selectedSale.TotalAmount.ToString("0.00");
+                txtSlItemPrice.Text = selectedSale.TotalAmount.ToString("0.00");
             }
         }
 
         private void btnSlShowDate_Click(object sender, EventArgs e)
         {
-            // 1. COMPLETELY RESET the grid before loading new data
-            // This stops the doubling/tripling of columns
-            dgvSalesLedger.DataSource = null;
-            dgvSalesLedger.Columns.Clear(); // Optional: clears manual columns if you want a fresh slate
-            dgvSalesLedger.AutoGenerateColumns = false;
-
-            // 2. Re-add your manual column mappings 
-            // This ensures your data goes into "Item Name" and not a new "ItemName" column
-            SetupSalesGridColumns();
-
-            // 3. Get the date and filter
-            DateTime selectedDate = dateTimePicker1.Value;
+            DateTime selectedDate = dateTimePicker1.Value;
             var filteredSales = _salesService.GetSalesByDate(selectedDate);
 
-            // 4. Bind the data
-            dgvSalesLedger.DataSource = filteredSales;
+            dgvSalesLedger.DataSource = null;
+            dgvSalesLedger.DataSource = filteredSales;
 
             if (filteredSales.Count == 0)
             {
-                MessageBox.Show($"No sales found for {selectedDate.ToShortDateString()}.");
+                MessageBox.Show($"No sales found for {selectedDate.ToShortDateString()}.", "No Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void btnSlSearch_Click(object sender, EventArgs e)
         {
-            // 1. Get the search text safely
-            string searchTerm = txtSlSearch.Text?.Trim() ?? string.Empty;
+            string searchTerm = txtSlSearch.Text?.Trim() ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                // If empty, just show everything
-                LoadSalesData();
+                LoadSalesData();
                 return;
             }
 
-            // 2. Filter the sales list
-            // We use .ToLower() to make sure "COCO" finds "coco"
-            var filteredResults = _salesService.GetAllSales()
-        .Where(s => s.ItemName != null &&
-              s.ItemName.ToLower().Contains(searchTerm.ToLower()))
-        .ToList();
+            var filteredResults = _salesService.GetAllSales()
+                .Where(s => s.ItemName != null && s.ItemName.ToLower().Contains(searchTerm.ToLower()))
+                .ToList();
 
-            // 3. Update the Grid
-            dgvSalesLedger.DataSource = filteredResults;
+            dgvSalesLedger.DataSource = filteredResults;
 
             if (filteredResults.Count == 0)
             {
-                MessageBox.Show($"No sales found matching '{searchTerm}'.");
+                MessageBox.Show($"No sales found matching '{searchTerm}'.", "No Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void btnSlFilterApply_Click(object sender, EventArgs e)
         {
-            // 1. Get the selected category safely
-            string selectedCategory = cmbSlFilterCategory.SelectedItem?.ToString() ?? string.Empty;
+            string selectedCategory = cmbSlFilterCategory.SelectedItem?.ToString() ?? string.Empty;
 
-            // 2. Handle "All" or Empty selection
-            // If "All" is selected, we clear the grid and reload everything
-            if (string.IsNullOrEmpty(selectedCategory) || selectedCategory == "All")
+            if (string.IsNullOrEmpty(selectedCategory) || selectedCategory == "All")
             {
-                dgvSalesLedger.DataSource = null; // Prevent doubling columns
-                dgvSalesLedger.AutoGenerateColumns = false;
-                LoadSalesData(); // Resets the grid to show everything
-                return;
+                LoadSalesData();
+                return;
             }
 
-            // 3. Filter the results
-            // We check s.Category != null to prevent CS8602 warnings
-            var filteredSales = _salesService.GetAllSales()
-        .Where(s => s.Category != null && s.Category.Equals(selectedCategory, StringComparison.OrdinalIgnoreCase))
-        .ToList();
+            var filteredSales = _salesService.GetAllSales()
+                .Where(s => s.Category != null && s.Category.Equals(selectedCategory, StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
-            // 4. Update the Grid
-            dgvSalesLedger.DataSource = null; // Reset before binding new data
-            dgvSalesLedger.DataSource = filteredSales;
+            dgvSalesLedger.DataSource = null;
+            dgvSalesLedger.DataSource = filteredSales;
 
-            // 5. Notify if no results found
-            if (filteredSales.Count == 0)
+            if (filteredSales.Count == 0)
             {
-                MessageBox.Show($"No sales found for category: {selectedCategory}");
+                MessageBox.Show($"No sales found for category: {selectedCategory}", "No Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+        //////////////////////////////////////////////////////////////////////////
+        // TAB LEDGER METHODS
+        //////////////////////////////////////////////////////////////////////////
 
+        private void RefreshTabLedgerGrid()
+        {
+            using (var context = new AppDbContext())
+            {
+                dgvTabLedger.DataSource = null;
+                dgvTabLedger.AutoGenerateColumns = false;
 
+                // Check if columns exist before setting DataPropertyName
+                if (dgvTabLedger.Columns.Contains("colTabName"))
+                    dgvTabLedger.Columns["colTabName"].DataPropertyName = "Name";
 
+                if (dgvTabLedger.Columns.Contains("colTabBalance"))
+                    dgvTabLedger.Columns["colTabBalance"].DataPropertyName = "ActiveBalance";
 
+                if (dgvTabLedger.Columns.Contains("colTabStatus"))
+                    dgvTabLedger.Columns["colTabStatus"].DataPropertyName = "DebtStatus";
+
+                if (dgvTabLedger.Columns.Contains("colTabDate"))
+                    dgvTabLedger.Columns["colTabDate"].DataPropertyName = "BeginDate";
+
+                var customerList = context.Customers.OrderBy(c => c.Name).ToList();
+                dgvTabLedger.DataSource = customerList;
+            }
+        }
 
         private void btnTabAddCustomer_Click(object sender, EventArgs e)
         {
-            // 1. Get data from UI (just like you do for Product Name)
-            string name = txtTabCustomerName.Text.Trim();
-
-            if (string.IsNullOrEmpty(name)) return;
-
-            // 2. Create the object (Similar to: new Product { ... })
-            var newCustomer = new Customer
+            string customerName = txtTabCustomerName.Text.Trim();
+            if (string.IsNullOrWhiteSpace(customerName))
             {
-                Name = name,
-                ActiveBalance = 0,      // Starting values as we discussed
-                DebtStatus = "N/A",
-                BeginDate = "N/A"
-            };
+                MessageBox.Show("Please enter a customer name before registering.",
+                                "Input Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-            // 3. Save to Database (Same pattern as Inventory)
-            _context.Customers.Add(newCustomer);
-            _context.SaveChanges();
+            using (var context = new AppDbContext())
+            {
+                bool nameExists = context.Customers.Any(c => c.Name.ToLower() == customerName.ToLower());
+                if (nameExists)
+                {
+                    MessageBox.Show($"A customer named '{customerName}' is already registered in the ledger system.",
+                                    "Duplicate Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-            // 4. Refresh the Table
-            txtTabCustomerName.Clear();
-          
+                var newCustomer = new Customer
+                {
+                    Name = customerName,
+                    ActiveBalance = 0,
+                    DebtStatus = "N/A",
+                    BeginDate = "N/A"
+                };
+
+                context.Customers.Add(newCustomer);
+                context.SaveChanges();
+            }
+
+            txtTabCustomerName.Clear();
+            RefreshTabLedgerGrid();
+
+            MessageBox.Show($"{customerName} has been successfully added to your Tab Ledger!",
+                            "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
-
 
         private void BtnVCDL_Click(object sender, EventArgs e)
         {
-            // 1. Get the selected customer from the grid
-            if (dgvTabLedger.CurrentRow?.DataBoundItem is Customer selectedCustomer)
+            if (dgvTabLedger.CurrentRow?.DataBoundItem is Customer selectedCustomer)
             {
-                // 2. Initialize the UserControl with the selected customer
-                UserControlDebtList debtListControl = new UserControlDebtList(selectedCustomer);
+                // Pass the InventoryService to the UserControlDebtList
+                UserControlDebtList debtListControl = new UserControlDebtList(selectedCustomer, _inventoryService);
                 debtListControl.Dock = DockStyle.Fill;
 
-                // 3. Create the FloatingHostForm to hold it
-                FloatingHostForm hostForm = new FloatingHostForm();
-                hostForm.Text = "Customer Debt Details";
+                FloatingHostForm hostForm = new FloatingHostForm();
+                hostForm.Text = $"Debt Details - {selectedCustomer.Name}";
                 hostForm.Controls.Add(debtListControl);
+                hostForm.ShowDialog();
 
-                // 4. Show it as a popup
-                hostForm.ShowDialog();
-
-                // 5. Refresh the main grid when the popup closes 
-               
+                // Refresh customer ledger balances when details popup closes
+                RefreshTabLedgerGrid();
             }
             else
             {
-                MessageBox.Show("Please select a customer from the table first!");
+                MessageBox.Show("Please select a customer from the table first!", "Selection Required",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
+        private void btnTabDeleteCustomer_Click(object sender, EventArgs e)
+        {
+            // Check if a row is actually selected
+            if (dgvTabLedger.CurrentRow == null)
+            {
+                MessageBox.Show("Please select a customer from the list to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            // Get the Customer object bound to the selected row
+            var selectedCustomer = dgvTabLedger.CurrentRow.DataBoundItem as Customer;
 
+            if (selectedCustomer == null)
+            {
+                MessageBox.Show("Unable to determine the selected customer record.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            // Financial Safety Guard: Prevent deleting customers who owe money
+            if (selectedCustomer.ActiveBalance > 0)
+            {
+                MessageBox.Show($"Cannot delete {selectedCustomer.Name} because they still have an outstanding debt balance of ₱{selectedCustomer.ActiveBalance:N2}.\n\nPlease settle their debts before removing them.",
+                    "Action Denied", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
 
+            // Confirm Deletion Intent
+            DialogResult confirmResult = MessageBox.Show(
+                $"Are you absolutely sure you want to permanently delete customer '{selectedCustomer.Name}'?\n\nThis will remove their history from the ledger.",
+                "Confirm Permanent Deletion",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
 
+            if (confirmResult == DialogResult.Yes)
+            {
+                try
+                {
+                    using (var context = new AppDbContext())
+                    {
+                        var customerToDelete = context.Customers.Find(selectedCustomer.Id);
+                        if (customerToDelete != null)
+                        {
+                            context.Customers.Remove(customerToDelete);
+                            context.SaveChanges();
+                        }
+                    }
 
+                    MessageBox.Show("Customer profile successfully deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RefreshTabLedgerGrid();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An unexpected database error occurred while trying to delete: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
 
+        private void btnTabEditCustomer_Click(object sender, EventArgs e)
+        {
+            // Check if a customer is selected
+            if (dgvTabLedger.CurrentRow == null)
+            {
+                MessageBox.Show("Please select a customer to edit.", "Selection Required",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            // Get the selected customer
+            var selectedCustomer = dgvTabLedger.CurrentRow.DataBoundItem as Customer;
 
+            if (selectedCustomer == null)
+            {
+                MessageBox.Show("Unable to determine the selected customer record.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            // Create a simple form for editing
+            Form editForm = new Form();
+            editForm.Text = "Edit Customer";
+            editForm.Size = new Size(350, 150);
+            editForm.StartPosition = FormStartPosition.CenterParent;
+            editForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            editForm.MaximizeBox = false;
+            editForm.MinimizeBox = false;
 
+            Label lblName = new Label() { Text = "Customer Name:", Left = 20, Top = 20, Width = 100 };
+            TextBox txtName = new TextBox() { Text = selectedCustomer.Name, Left = 130, Top = 17, Width = 180 };
+            Button btnSave = new Button() { Text = "Save", Left = 80, Top = 60, Width = 80, DialogResult = DialogResult.OK };
+            Button btnCancel = new Button() { Text = "Cancel", Left = 180, Top = 60, Width = 80, DialogResult = DialogResult.Cancel };
 
+            editForm.Controls.Add(lblName);
+            editForm.Controls.Add(txtName);
+            editForm.Controls.Add(btnSave);
+            editForm.Controls.Add(btnCancel);
 
+            if (editForm.ShowDialog() == DialogResult.OK)
+            {
+                string newName = txtName.Text.Trim();
 
+                if (string.IsNullOrWhiteSpace(newName))
+                {
+                    MessageBox.Show("Customer name cannot be empty.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
+                using (var context = new AppDbContext())
+                {
+                    // Check for duplicate name
+                    bool nameExists = context.Customers.Any(c => c.Id != selectedCustomer.Id &&
+                        c.Name.ToLower() == newName.ToLower());
 
+                    if (nameExists)
+                    {
+                        MessageBox.Show($"A customer named '{newName}' already exists.",
+                            "Duplicate Name", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
+                    try
+                    {
+                        // Update customer name
+                        selectedCustomer.Name = newName;
+                        context.Customers.Update(selectedCustomer);
 
+                        // Update DebtItems tags
+                        var oldNameTag = $"[{selectedCustomer.Name.ToLower()}]";
+                        var newNameTag = $"[{newName.ToLower()}]";
 
+                        var allItems = context.DebtItems.ToList();
+                        var customerItems = allItems.Where(d => d.ItemName != null &&
+                            d.ItemName.StartsWith(oldNameTag, StringComparison.OrdinalIgnoreCase));
 
+                        foreach (var item in customerItems)
+                        {
+                            item.ItemName = newNameTag + item.ItemName.Substring(oldNameTag.Length);
+                        }
 
+                        context.SaveChanges();
+                        RefreshTabLedgerGrid();
 
+                        MessageBox.Show($"Customer name changed to '{newName}'!", "Success",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error updating customer: {ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
 
+        private void btnTabSearch_Click(object sender, EventArgs e)
+        {
+            // Get the search term from the textbox
+            string searchTerm = txtTabSearchName.Text.Trim();
 
+            // Check if search term is empty
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                MessageBox.Show("Please enter a customer name to search.", "Search Required",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
+            using (var context = new AppDbContext())
+            {
+                // Search for customers whose name contains the search term (case-insensitive)
+                var searchResults = context.Customers
+                    .Where(c => c.Name != null && c.Name.ToLower().Contains(searchTerm.ToLower()))
+                    .OrderBy(c => c.Name)
+                    .ToList();
 
+                // Check if any results found
+                if (searchResults.Count == 0)
+                {
+                    MessageBox.Show($"No customers found matching '{searchTerm}'.", "No Results",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Display search results in the DataGridView
+                dgvTabLedger.DataSource = null;
+                dgvTabLedger.AutoGenerateColumns = false;
+
+                // Set column mappings
+                if (dgvTabLedger.Columns.Contains("colTabName"))
+                    dgvTabLedger.Columns["colTabName"].DataPropertyName = "Name";
+
+                if (dgvTabLedger.Columns.Contains("colTabBalance"))
+                    dgvTabLedger.Columns["colTabBalance"].DataPropertyName = "ActiveBalance";
+
+                if (dgvTabLedger.Columns.Contains("colTabStatus"))
+                    dgvTabLedger.Columns["colTabStatus"].DataPropertyName = "DebtStatus";
+
+                if (dgvTabLedger.Columns.Contains("colTabDate"))
+                    dgvTabLedger.Columns["colTabDate"].DataPropertyName = "BeginDate";
+
+                dgvTabLedger.DataSource = searchResults;
+            }
+        }
     }
 }
