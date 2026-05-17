@@ -11,32 +11,21 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
     {
         private Customer _customer;
         private readonly AppDbContext _context;
-
-        public UserControlDebtList(Customer customer)
-        {
-            InitializeComponent();
-            _customer = customer ?? new Customer { Name = "Unknown" };
-            _context = new AppDbContext();
-
-            lblDlCustomerName.Text = $"Customer Name: {_customer.Name}";
-            SetupDataGridView();
-            LoadDebtHistory();
-        }
-
-        // In UserControlDebtList.cs - Update the constructor and add field
         private readonly InventoryService _inventoryService;
+        private int _editingDebtId = 0;
 
         public UserControlDebtList(Customer customer, InventoryService inventoryService)
         {
             InitializeComponent();
             _customer = customer ?? new Customer { Name = "Unknown" };
             _context = new AppDbContext();
-            _inventoryService = inventoryService;  // Store the service
+            _inventoryService = inventoryService ?? throw new ArgumentNullException(nameof(inventoryService));
 
             lblDlCustomerName.Text = $"Customer Name: {_customer.Name}";
             SetupDataGridView();
             LoadDebtHistory();
         }
+
         private void SetupDataGridView()
         {
             dgvDebtList.AutoGenerateColumns = false;
@@ -88,15 +77,14 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
         private void LoadDebtHistory()
         {
+            // FIXED: Load all items into memory first
             var allItems = _context.DebtItems.ToList();
 
-            // Get all items for this customer and order by date (ascending for correct running balance)
             var customerItems = allItems
                 .Where(d => d.ItemName != null && d.ItemName.StartsWith($"[{_customer.Name.ToLower()}]", StringComparison.OrdinalIgnoreCase))
                 .OrderBy(d => d.TimeAndDate)
                 .ToList();
 
-            // Create a list with running balance calculated
             var displayList = new System.Collections.Generic.List<dynamic>();
             decimal runningBalance = 0;
 
@@ -118,11 +106,11 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
             dgvDebtList.DataSource = null;
             dgvDebtList.DataSource = displayList;
+            _editingDebtId = 0;
         }
 
         private void btnDlAddItem_Click(object sender, EventArgs e)
         {
-            // Validate inputs
             if (string.IsNullOrWhiteSpace(txtDlItemName.Text))
             {
                 MessageBox.Show("Please enter an item name.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -138,7 +126,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             string category = cmbDlCategory.SelectedItem?.ToString() ?? "";
             string itemName = txtDlItemName.Text.Trim();
 
-            // Get product from inventory service
             var allProducts = _inventoryService.GetAllProducts();
             var product = allProducts.FirstOrDefault(p => p.Name != null &&
                 p.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
@@ -151,7 +138,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 return;
             }
 
-            // Calculate quantity
             int quantityForDebt = (int)(totalAmount / product.Price);
 
             if (quantityForDebt <= 0)
@@ -161,7 +147,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 return;
             }
 
-            // USE INVENTORY SERVICE to subtract stock (same as Sales Ledger)
             var stockResult = _inventoryService.SubtractStock(product.Name, quantityForDebt);
 
             if (!stockResult.Success)
@@ -170,7 +155,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 return;
             }
 
-            // Create debt item
             var newDebtItem = new DebtItem
             {
                 ItemName = $"[{_customer.Name.ToLower()}] " + product.Name,
@@ -184,7 +168,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             {
                 context.DebtItems.Add(newDebtItem);
 
-                // Update customer balance
                 var customer = context.Customers.Find(_customer.Id);
                 if (customer != null)
                 {
@@ -201,11 +184,11 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
             LoadDebtHistory();
             ClearInputFields();
-            MessageBox.Show($"Item added to debt list!\n\n{quantityForDebt} {product.Name}(s) deducted from inventory.\n{stockResult.Message}",
+            MessageBox.Show($"Item added to debt list!\n\n{quantityForDebt} {product.Name}(s) deducted from inventory.",
                 "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-
+        // FIXED: btnPaydebt_Click with proper in-memory filtering
         private void btnPaydebt_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(textPaidAmount.Text))
@@ -236,47 +219,107 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                     return;
                 }
 
-                // Update customer balance
-                decimal oldBalance = customer.ActiveBalance;
-                customer.ActiveBalance -= paidAmount;
-                customer.DebtStatus = customer.ActiveBalance == 0 ? "Clear" : "Unpaid";
+                // FIXED: Load all debt items into memory first, then filter
+                var allDebtItems = context.DebtItems.ToList();
+                var debtItems = allDebtItems
+                    .Where(d => d.ItemName != null && d.ItemName.StartsWith($"[{_customer.Name.ToLower()}]", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(d => d.TimeAndDate)
+                    .ToList();
 
-                bool isFullyPaid = customer.ActiveBalance == 0;
+                decimal remainingPayment = paidAmount;
+                var itemsToTransfer = new System.Collections.Generic.List<DebtItem>();
+                var partiallyPaidItem = new { Item = (DebtItem)null, PartialAmount = 0m, PartialQuantity = 0 };
 
-                // If balance becomes zero, ask user what to do
-                if (isFullyPaid)
+                foreach (var item in debtItems)
                 {
-                    DialogResult clearItems = MessageBox.Show(
-                        "Customer's debt is now fully paid!\n\n" +
-                        "Do you want to remove all debt items from the list?\n\n" +
-                        "Yes = Remove all items\nNo = Keep items in the list",
-                        "Debt Cleared", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (remainingPayment <= 0) break;
 
-                    if (clearItems == DialogResult.Yes)
+                    if (item.TotalAmount <= remainingPayment)
                     {
-                        // Find and delete all debt items for this customer
-                        var customerDebtItems = context.DebtItems
-                            .Where(d => d.ItemName != null && d.ItemName.StartsWith($"[{_customer.Name.ToLower()}]"))
-                            .ToList();
-
-                        context.DebtItems.RemoveRange(customerDebtItems);
-
-                        MessageBox.Show($"All {customerDebtItems.Count} debt item(s) have been removed from the list.",
-                            "Items Removed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        itemsToTransfer.Add(item);
+                        remainingPayment -= item.TotalAmount;
+                    }
+                    else
+                    {
+                        int partialQuantity = (int)((remainingPayment / item.TotalAmount) * item.ItemSold);
+                        partiallyPaidItem = new { Item = item, PartialAmount = remainingPayment, PartialQuantity = partialQuantity };
+                        remainingPayment = 0;
                     }
                 }
+
+                string confirmMessage = $"Payment of ₱{paidAmount:N2} from {_customer.Name} will be recorded as official sales:\n\n";
+                foreach (var item in itemsToTransfer)
+                {
+                    string itemName = item.ItemName.Contains("] ") ? item.ItemName.Split(new[] { "] " }, StringSplitOptions.None)[1] : item.ItemName;
+                    confirmMessage += $"• {itemName} - ₱{item.TotalAmount:N2}\n";
+                }
+                if (partiallyPaidItem.Item != null)
+                {
+                    string itemName = partiallyPaidItem.Item.ItemName.Contains("] ") ?
+                        partiallyPaidItem.Item.ItemName.Split(new[] { "] " }, StringSplitOptions.None)[1] :
+                        partiallyPaidItem.Item.ItemName;
+                    confirmMessage += $"• {itemName} - ₱{partiallyPaidItem.PartialAmount:N2} (Partial)\n";
+                }
+
+                DialogResult confirm = MessageBox.Show(confirmMessage + "\n\nProceed with payment?",
+                    "Confirm Payment", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (confirm != DialogResult.Yes) return;
+
+                // Transfer fully paid items to SALES LEDGER
+                foreach (var item in itemsToTransfer)
+                {
+                    string originalItemName = item.ItemName.Contains("] ") ?
+                        item.ItemName.Split(new[] { "] " }, StringSplitOptions.None)[1] :
+                        item.ItemName;
+
+                    var sale = new Sale
+                    {
+                        ItemName = originalItemName,
+                        Category = item.Category,
+                        ItemSold = item.ItemSold,
+                        TotalAmount = item.TotalAmount,
+                        TimeAndDate = DateTime.Now
+                    };
+                    context.Sales.Add(sale);
+                    context.DebtItems.Remove(item);
+                }
+
+                // Handle partial payment
+                if (partiallyPaidItem.Item != null)
+                {
+                    string originalItemName = partiallyPaidItem.Item.ItemName.Contains("] ") ?
+                        partiallyPaidItem.Item.ItemName.Split(new[] { "] " }, StringSplitOptions.None)[1] :
+                        partiallyPaidItem.Item.ItemName;
+
+                    var sale = new Sale
+                    {
+                        ItemName = originalItemName,
+                        Category = partiallyPaidItem.Item.Category,
+                        ItemSold = partiallyPaidItem.PartialQuantity,
+                        TotalAmount = partiallyPaidItem.PartialAmount,
+                        TimeAndDate = DateTime.Now
+                    };
+                    context.Sales.Add(sale);
+
+                    partiallyPaidItem.Item.TotalAmount -= partiallyPaidItem.PartialAmount;
+                    partiallyPaidItem.Item.ItemSold -= partiallyPaidItem.PartialQuantity;
+                    context.DebtItems.Update(partiallyPaidItem.Item);
+                }
+
+                customer.ActiveBalance -= paidAmount;
+                customer.DebtStatus = customer.ActiveBalance == 0 ? "Clear" : "Unpaid";
 
                 context.SaveChanges();
             }
 
-            // Refresh the debt history display
             LoadDebtHistory();
             textPaidAmount.Clear();
             ClearInputFields();
-            buttonSave.Tag = null;
 
-            MessageBox.Show($"Payment of ₱{paidAmount:N2} recorded successfully!", "Success",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"Payment of ₱{paidAmount:N2} recorded successfully!\n\n" +
+                "Paid items have been transferred to the Sales Ledger as official sales.",
+                "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void dgvDebtList_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -291,14 +334,13 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
                 if (idProperty != null && itemNameProperty != null)
                 {
-                    int debtId = (int)idProperty.GetValue(selectedItem);
+                    _editingDebtId = (int)idProperty.GetValue(selectedItem);
                     string displayName = (string)itemNameProperty.GetValue(selectedItem);
                     string category = categoryProperty != null ? (string)categoryProperty.GetValue(selectedItem) : "";
                     decimal amount = amountProperty != null ? (decimal)amountProperty.GetValue(selectedItem) : 0;
 
                     txtDlItemName.Text = displayName;
                     txtDlAmount.Text = amount.ToString("0.00");
-                    buttonSave.Tag = debtId;
 
                     if (!string.IsNullOrEmpty(category))
                     {
@@ -315,138 +357,14 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             }
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            if (buttonSave.Tag == null)
-            {
-                MessageBox.Show("Please select a debt item to edit first.", "No Selection",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            int debtId = (int)buttonSave.Tag;
-
-            if (!decimal.TryParse(txtDlAmount.Text, out decimal newAmount) || newAmount <= 0)
-            {
-                MessageBox.Show("Please enter a valid positive amount.", "Input Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtDlItemName.Text))
-            {
-                MessageBox.Show("Please enter an item name.", "Input Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            string category = cmbDlCategory.SelectedItem?.ToString() ?? "";
-
-            using (var context = new AppDbContext())
-            {
-                var debtItem = context.DebtItems.Find(debtId);
-                if (debtItem != null)
-                {
-                    decimal oldAmount = debtItem.TotalAmount;
-                    decimal difference = newAmount - oldAmount;
-                    int oldQuantity = debtItem.ItemSold;
-                    int newQuantity = (int)(newAmount / GetProductPrice(context, debtItem.ItemName));
-
-                    string oldTag = debtItem.ItemName.Split(']')[0] + "]";
-                    debtItem.ItemName = oldTag + " " + txtDlItemName.Text.Trim();
-                    debtItem.Category = category;
-                    debtItem.TotalAmount = newAmount;
-                    debtItem.ItemSold = newQuantity > 0 ? newQuantity : oldQuantity;
-
-                    // Update inventory stock based on quantity change
-                    var product = context.Products
-                        .FirstOrDefault(p => p.Name != null && p.Name.ToLower() == txtDlItemName.Text.Trim().ToLower());
-
-                    if (product != null)
-                    {
-                        int quantityDifference = newQuantity - oldQuantity;
-                        if (quantityDifference != 0)
-                        {
-                            if (product.Stocks >= quantityDifference)
-                            {
-                                product.Stocks -= quantityDifference;
-                            }
-                            else
-                            {
-                                MessageBox.Show("Insufficient stock for this change!", "Stock Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                return;
-                            }
-                        }
-                    }
-
-                    var customer = context.Customers.Find(_customer.Id);
-                    if (customer != null)
-                    {
-                        customer.ActiveBalance += difference;
-                        customer.DebtStatus = customer.ActiveBalance > 0 ? "Unpaid" : "Clear";
-                    }
-
-                    context.SaveChanges();
-
-                    buttonSave.Tag = null;
-                    LoadDebtHistory();
-                    ClearInputFields();
-                    MessageBox.Show("Debt item updated successfully!", "Success",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
+       
+       
 
         private decimal GetProductPrice(AppDbContext context, string itemName)
         {
             var product = context.Products
                 .FirstOrDefault(p => p.Name != null && itemName.ToLower().Contains(p.Name.ToLower()));
             return product?.Price ?? 0;
-        }
-
-        private void btnDlEditDebt_Click(object sender, EventArgs e)
-        {
-            if (dgvDebtList.CurrentRow?.DataBoundItem != null)
-            {
-                var selectedItem = dgvDebtList.CurrentRow.DataBoundItem;
-                var itemNameProperty = selectedItem.GetType().GetProperty("ItemName");
-                var categoryProperty = selectedItem.GetType().GetProperty("Category");
-                var amountProperty = selectedItem.GetType().GetProperty("TotalAmount");
-                var idProperty = selectedItem.GetType().GetProperty("Id");
-
-                if (itemNameProperty != null && idProperty != null)
-                {
-                    string displayName = (string)itemNameProperty.GetValue(selectedItem);
-                    string category = categoryProperty != null ? (string)categoryProperty.GetValue(selectedItem) : "";
-                    decimal amount = amountProperty != null ? (decimal)amountProperty.GetValue(selectedItem) : 0;
-                    int debtId = (int)idProperty.GetValue(selectedItem);
-
-                    txtDlItemName.Text = displayName;
-                    txtDlAmount.Text = amount.ToString("0.00");
-                    buttonSave.Tag = debtId;
-
-                    if (!string.IsNullOrEmpty(category))
-                    {
-                        for (int i = 0; i < cmbDlCategory.Items.Count; i++)
-                        {
-                            if (cmbDlCategory.Items[i].ToString() == category)
-                            {
-                                cmbDlCategory.SelectedIndex = i;
-                                break;
-                            }
-                        }
-                    }
-
-                    MessageBox.Show("You can now edit the item. Click Save when done.", "Edit Mode",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Please select a debt item to edit first.", "Selection Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
         }
 
         private void btnDlDeleteDebt_Click(object sender, EventArgs e)
@@ -472,21 +390,18 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
                     if (confirm == DialogResult.Yes)
                     {
-                        // Find the actual product name from inventory
                         var allProducts = _inventoryService.GetAllProducts();
                         var product = allProducts.FirstOrDefault(p => itemName.ToLower().Contains(p.Name.ToLower()));
 
                         if (product != null)
                         {
-                            // RETURN STOCK using InventoryService (add back)
-                            var addStockResult = _inventoryService.AddStock(product.Name, quantityToReturn);
+                            _inventoryService.AddStock(product.Name, quantityToReturn);
 
                             using (var context = new AppDbContext())
                             {
                                 var debtItem = context.DebtItems.Find(debtId);
                                 if (debtItem != null)
                                 {
-                                    // Subtract from customer's debt balance
                                     var customer = context.Customers.Find(_customer.Id);
                                     if (customer != null)
                                     {
@@ -503,7 +418,7 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
                         LoadDebtHistory();
                         ClearInputFields();
-                        buttonSave.Tag = null;
+                        _editingDebtId = 0;
                         MessageBox.Show($"Debt item removed!\n\n{quantityToReturn} item(s) returned to inventory.",
                             "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -515,7 +430,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
 
         private void buttonReturn_Click(object sender, EventArgs e)
         {
@@ -532,7 +446,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             txtDlAmount.Clear();
             textPaidAmount.Clear();
             cmbDlCategory.SelectedIndex = -1;
-            buttonSave.Tag = null;
         }
     }
 }

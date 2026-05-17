@@ -13,9 +13,21 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 {
     public partial class Form1 : MaterialForm
     {
+        #region Private Fields / Variables
+
         private readonly InventoryService _inventoryService;
         private readonly SalesService _salesService;
         private readonly AppDbContext _context;
+        private readonly BusinessContactService _businessContactService;
+        private readonly SettingsService _settingsService;
+
+        // Edit mode tracking variables
+        private bool isEditMode = false;
+        private int editingContactId = 0;
+
+        #endregion
+
+        #region Constructor & Initialization
 
         public Form1()
         {
@@ -23,11 +35,15 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
             using (var db = new AppDbContext())
             {
-                db.Database.EnsureCreated(); // Creates the .db file if it's missing
+                db.Database.EnsureCreated();
             }
 
             _context = new AppDbContext();
             _context.Database.EnsureCreated();
+            _businessContactService = new BusinessContactService(new AppDbContext());
+            _inventoryService = new InventoryService(new AppDbContext());
+            _salesService = new SalesService(new AppDbContext());
+            _settingsService = new SettingsService(new AppDbContext());
 
             // MaterialSkin Setup
             var msm = MaterialSkinManager.Instance;
@@ -50,23 +66,39 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             labelTL.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
             labelTL.ForeColor = Color.FromArgb(153, 101, 21);
 
-            // Initialize Services
-            _inventoryService = new InventoryService(new AppDbContext());
-            _salesService = new SalesService(new AppDbContext());
+            LblHome.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
+            LblHome.ForeColor = Color.FromArgb(153, 101, 21);
 
-            // Load ALL grids right here on startup
+            lblSettings.Font = new Font("Montserrat", 30f, FontStyle.Bold | FontStyle.Underline);
+            lblSettings.ForeColor = Color.FromArgb(153, 101, 21);
+
+            this.MaximizeBox = false;
+
+            InitializeHistoryComboBox();
+            SetupHomeGridColumns();
+            LoadHomeData();
             LoadInventoryData();
             LoadSalesData();
             RefreshTabLedgerGrid();
+            LoadSettingsToUI();  // Load saved settings
 
-            // Attach the tab change event dynamically to handle updates on tab-switch
             if (materialTabControl1 != null)
             {
                 materialTabControl1.SelectedIndexChanged += MaterialTabControl1_SelectedIndexChanged;
             }
         }
 
-        // Real-Time Sync Trigger: Automatically pulls data fresh from SQLite whenever you change tabs
+        private void InitializeHistoryComboBox()
+        {
+            comboBoxDLHistory.Items.Clear();
+            comboBoxDLHistory.Items.Add("Current Day");
+            comboBoxDLHistory.Items.Add("Last 5 days");
+            comboBoxDLHistory.Items.Add("Last week");
+            comboBoxDLHistory.Items.Add("Last Month");
+            comboBoxDLHistory.Items.Add("Last year");
+            comboBoxDLHistory.SelectedIndex = 0;
+        }
+
         private void MaterialTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadInventoryData();
@@ -74,14 +106,111 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             RefreshTabLedgerGrid();
         }
 
+        #endregion
+
+        #region SETTINGS SECTION
+
+        private void LoadSettingsToUI()
+        {
+            try
+            {
+                // Load Inventory Settings
+                chkLowStockAlert.Checked = _settingsService.IsLowStockAlertEnabled();
+                numLowStockThreshold.Value = _settingsService.GetLowStockThreshold();
+                numCriticalStockThreshold.Value = _settingsService.GetCriticalStockThreshold();
+
+                // Load Debt Settings
+                numCreditLimit.Value = _settingsService.GetCreditLimit();
+                numDueDays.Value = _settingsService.GetPaymentDueDays();
+                numLateFeePercent.Value = _settingsService.GetLateFeePercentage();
+                chkAutoApplyLateFee.Checked = _settingsService.IsAutoApplyLateFeeEnabled();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error loading settings: {ex.Message}");
+            }
+        }
+
+        private void btnSaveset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Save Inventory Settings
+                _settingsService.SetSetting("LowStockAlertEnabled", chkLowStockAlert.Checked.ToString().ToLower());
+                _settingsService.SetSetting("LowStockThreshold", numLowStockThreshold.Value.ToString());
+                _settingsService.SetSetting("CriticalStockThreshold", numCriticalStockThreshold.Value.ToString());
+
+                // Save Debt Settings
+                _settingsService.SetSetting("CreditLimit", numCreditLimit.Value.ToString());
+                _settingsService.SetSetting("PaymentDueDays", numDueDays.Value.ToString());
+                _settingsService.SetSetting("LateFeePercentage", numLateFeePercent.Value.ToString());
+                _settingsService.SetSetting("AutoApplyLateFee", chkAutoApplyLateFee.Checked.ToString().ToLower());
+
+                MessageBox.Show("Settings saved successfully!\n\n" +
+                    "INVENTORY SETTINGS:\n" +
+                    $"• Low Stock Alert: {(chkLowStockAlert.Checked ? "Enabled" : "Disabled")}\n" +
+                    $"• Alert Threshold: {numLowStockThreshold.Value} items\n" +
+                    $"• Critical Level: {numCriticalStockThreshold.Value} items\n\n" +
+                    "DEBT SETTINGS:\n" +
+                    $"• Credit Limit: ₱{numCreditLimit.Value:N0}\n" +
+                    $"• Payment Due Days: {numDueDays.Value} days\n" +
+                    $"• Late Fee: {numLateFeePercent.Value}%\n" +
+                    $"• Auto Apply Late Fee: {(chkAutoApplyLateFee.Checked ? "Enabled" : "Disabled")}",
+                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving settings: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btndefaultset_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "Reset all settings to default values?\n\n" +
+                "INVENTORY SETTINGS:\n" +
+                "• Low Stock Alert: Enabled\n" +
+                "• Alert Threshold: 10 items\n" +
+                "• Critical Level: 5 items\n\n" +
+                "DEBT SETTINGS:\n" +
+                "• Credit Limit: ₱5,000\n" +
+                "• Payment Due Days: 30 days\n" +
+                "• Late Fee: 5%\n" +
+                "• Auto Apply Late Fee: Disabled\n\n" +
+                "You will need to click 'Save Settings' to keep these changes.",
+                "Confirm Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                // Reset Inventory Settings values
+                chkLowStockAlert.Checked = true;
+                numLowStockThreshold.Value = 10;
+                numCriticalStockThreshold.Value = 5;
+
+                // Reset Debt Settings values
+                numCreditLimit.Value = 5000;
+                numDueDays.Value = 30;
+                numLateFeePercent.Value = 5;
+                chkAutoApplyLateFee.Checked = false;
+
+                MessageBox.Show("Settings have been reset to default values!\n\n" +
+                    "Click 'Save Settings' to permanently save these changes.",
+                    "Reset Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        #endregion
+
+        #region INVENTORY SECTION
+
         private void LoadInventoryData()
         {
             var data = _inventoryService.GetAllProducts();
 
-            dgvInventory.DataSource = null; // Flush cache binding
+            dgvInventory.DataSource = null;
             dgvInventory.AutoGenerateColumns = false;
 
-            // Check if columns exist before setting DataPropertyName
             if (dgvInventory.Columns.Contains("colInvName"))
                 dgvInventory.Columns["colInvName"].DataPropertyName = "Name";
 
@@ -216,7 +345,7 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 return;
             }
 
-            var filteredData = _inventoryService.GetProductsByCategory(selectedCategory) ?? new List<Product>();
+            var filteredData = _inventoryService.GetProductsByCategory(selectedCategory) ?? new System.Collections.Generic.List<Product>();
 
             dgvInventory.DataSource = null;
             dgvInventory.DataSource = filteredData;
@@ -227,9 +356,9 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             }
         }
 
-        //////////////////////////////////////////////////////////////////////////
-        // SALES LEDGER METHODS
-        //////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region SALES LEDGER SECTION
 
         private void SetupSalesGridColumns()
         {
@@ -241,6 +370,38 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSLCategory", HeaderText = "Category", DataPropertyName = "Category" });
             dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSlPrice", HeaderText = "Total Amount (₱)", DataPropertyName = "TotalAmount" });
             dgvSalesLedger.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSLDateTime", HeaderText = "Time and Date", DataPropertyName = "TimeAndDate" });
+        }
+
+        private void LoadSalesData()
+        {
+            using (var context = new AppDbContext())
+            {
+                dgvSalesLedger.DataSource = null;
+                dgvSalesLedger.AutoGenerateColumns = false;
+
+                if (dgvSalesLedger.Columns.Count == 0)
+                {
+                    SetupSalesGridColumns();
+                }
+
+                if (dgvSalesLedger.Columns.Contains("colSLName"))
+                    dgvSalesLedger.Columns["colSLName"].DataPropertyName = "ItemName";
+
+                if (dgvSalesLedger.Columns.Contains("colSLItemsold"))
+                    dgvSalesLedger.Columns["colSLItemsold"].DataPropertyName = "ItemSold";
+
+                if (dgvSalesLedger.Columns.Contains("colSLCategory"))
+                    dgvSalesLedger.Columns["colSLCategory"].DataPropertyName = "Category";
+
+                if (dgvSalesLedger.Columns.Contains("colSlPrice"))
+                    dgvSalesLedger.Columns["colSlPrice"].DataPropertyName = "TotalAmount";
+
+                if (dgvSalesLedger.Columns.Contains("colSLDateTime"))
+                    dgvSalesLedger.Columns["colSLDateTime"].DataPropertyName = "TimeAndDate";
+
+                var salesList = context.Sales.OrderByDescending(s => s.TimeAndDate).ToList();
+                dgvSalesLedger.DataSource = salesList;
+            }
         }
 
         private void btnSlAddItem_Click(object sender, EventArgs e)
@@ -330,36 +491,11 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             }
         }
 
-        private void LoadSalesData()
+        private void ClearSlFields()
         {
-            using (var context = new AppDbContext())
-            {
-                dgvSalesLedger.DataSource = null;
-                dgvSalesLedger.AutoGenerateColumns = false;
-
-                if (dgvSalesLedger.Columns.Count == 0)
-                {
-                    SetupSalesGridColumns();
-                }
-
-                if (dgvSalesLedger.Columns.Contains("colSLName"))
-                    dgvSalesLedger.Columns["colSLName"].DataPropertyName = "ItemName";
-
-                if (dgvSalesLedger.Columns.Contains("colSLItemsold"))
-                    dgvSalesLedger.Columns["colSLItemsold"].DataPropertyName = "ItemSold";
-
-                if (dgvSalesLedger.Columns.Contains("colSLCategory"))
-                    dgvSalesLedger.Columns["colSLCategory"].DataPropertyName = "Category";
-
-                if (dgvSalesLedger.Columns.Contains("colSlPrice"))
-                    dgvSalesLedger.Columns["colSlPrice"].DataPropertyName = "TotalAmount";
-
-                if (dgvSalesLedger.Columns.Contains("colSLDateTime"))
-                    dgvSalesLedger.Columns["colSLDateTime"].DataPropertyName = "TimeAndDate";
-
-                var salesList = context.Sales.OrderByDescending(s => s.TimeAndDate).ToList();
-                dgvSalesLedger.DataSource = salesList;
-            }
+            txtSlItemName.Clear();
+            txtSlItemPrice.Clear();
+            cmbSlCategory.SelectedIndex = -1;
         }
 
         private void btnSlDeleteItem_Click(object sender, EventArgs e)
@@ -389,36 +525,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             else
             {
                 MessageBox.Show("Please select a sale record to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void ClearSlFields()
-        {
-            txtSlItemName.Clear();
-            txtSlItemPrice.Clear();
-            cmbSlCategory.SelectedIndex = -1;
-        }
-
-        private void btnSlEditItem_Click(object sender, EventArgs e)
-        {
-            if (dgvSalesLedger.CurrentRow?.DataBoundItem is Sale saleToUpdate)
-            {
-                saleToUpdate.ItemName = txtSlItemName.Text.Trim();
-                saleToUpdate.Category = cmbSlCategory.Text;
-
-                if (decimal.TryParse(txtSlItemPrice.Text, out decimal newPrice))
-                {
-                    saleToUpdate.TotalAmount = newPrice;
-                    _salesService.UpdateSale(saleToUpdate);
-
-                    LoadSalesData();
-                    ClearSlFields();
-                    MessageBox.Show("Changes saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show("Please enter a valid price.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
             }
         }
 
@@ -505,9 +611,72 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
             }
         }
 
-        //////////////////////////////////////////////////////////////////////////
-        // TAB LEDGER METHODS
-        //////////////////////////////////////////////////////////////////////////
+        private void btnSLhistoryCalculate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var context = new AppDbContext())
+                {
+                    string selectedFilter = comboBoxDLHistory.SelectedItem?.ToString() ?? "Current Day";
+
+                    DateTime startDate;
+                    DateTime endDate = DateTime.Now;
+
+                    switch (selectedFilter)
+                    {
+                        case "Current Day":
+                            startDate = DateTime.Today;
+                            break;
+                        case "Last 5 days":
+                            startDate = DateTime.Today.AddDays(-5);
+                            break;
+                        case "Last week":
+                            startDate = DateTime.Today.AddDays(-7);
+                            break;
+                        case "Last Month":
+                            startDate = DateTime.Today.AddMonths(-1);
+                            break;
+                        case "Last year":
+                            startDate = DateTime.Today.AddYears(-1);
+                            break;
+                        default:
+                            startDate = DateTime.Today;
+                            break;
+                    }
+
+                    var allSales = context.Sales.ToList();
+
+                    var filteredSales = allSales
+                        .Where(s => s.TimeAndDate >= startDate && s.TimeAndDate <= endDate)
+                        .ToList();
+
+                    decimal totalAmount = 0;
+                    foreach (var sale in filteredSales)
+                    {
+                        totalAmount += sale.TotalAmount;
+                    }
+
+                    materialTextBoxTotalSLSold.Text = $"₱{totalAmount:N2}";
+                    dgvSalesLedger.DataSource = null;
+                    dgvSalesLedger.DataSource = filteredSales;
+
+                    if (filteredSales.Count == 0)
+                    {
+                        MessageBox.Show($"No sales found for '{selectedFilter}'.", "No Results",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        #endregion
+
+        #region TAB LEDGER SECTION
 
         private void RefreshTabLedgerGrid()
         {
@@ -516,7 +685,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 dgvTabLedger.DataSource = null;
                 dgvTabLedger.AutoGenerateColumns = false;
 
-                // Check if columns exist before setting DataPropertyName
                 if (dgvTabLedger.Columns.Contains("colTabName"))
                     dgvTabLedger.Columns["colTabName"].DataPropertyName = "Name";
 
@@ -577,7 +745,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
         {
             if (dgvTabLedger.CurrentRow?.DataBoundItem is Customer selectedCustomer)
             {
-                // Pass the InventoryService to the UserControlDebtList
                 UserControlDebtList debtListControl = new UserControlDebtList(selectedCustomer, _inventoryService);
                 debtListControl.Dock = DockStyle.Fill;
 
@@ -586,7 +753,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 hostForm.Controls.Add(debtListControl);
                 hostForm.ShowDialog();
 
-                // Refresh customer ledger balances when details popup closes
                 RefreshTabLedgerGrid();
             }
             else
@@ -598,14 +764,12 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
         private void btnTabDeleteCustomer_Click(object sender, EventArgs e)
         {
-            // Check if a row is actually selected
             if (dgvTabLedger.CurrentRow == null)
             {
                 MessageBox.Show("Please select a customer from the list to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Get the Customer object bound to the selected row
             var selectedCustomer = dgvTabLedger.CurrentRow.DataBoundItem as Customer;
 
             if (selectedCustomer == null)
@@ -614,7 +778,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 return;
             }
 
-            // Financial Safety Guard: Prevent deleting customers who owe money
             if (selectedCustomer.ActiveBalance > 0)
             {
                 MessageBox.Show($"Cannot delete {selectedCustomer.Name} because they still have an outstanding debt balance of ₱{selectedCustomer.ActiveBalance:N2}.\n\nPlease settle their debts before removing them.",
@@ -622,7 +785,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 return;
             }
 
-            // Confirm Deletion Intent
             DialogResult confirmResult = MessageBox.Show(
                 $"Are you absolutely sure you want to permanently delete customer '{selectedCustomer.Name}'?\n\nThis will remove their history from the ledger.",
                 "Confirm Permanent Deletion",
@@ -656,7 +818,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
         private void btnTabEditCustomer_Click(object sender, EventArgs e)
         {
-            // Check if a customer is selected
             if (dgvTabLedger.CurrentRow == null)
             {
                 MessageBox.Show("Please select a customer to edit.", "Selection Required",
@@ -664,7 +825,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 return;
             }
 
-            // Get the selected customer
             var selectedCustomer = dgvTabLedger.CurrentRow.DataBoundItem as Customer;
 
             if (selectedCustomer == null)
@@ -674,7 +834,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 return;
             }
 
-            // Create a simple form for editing
             Form editForm = new Form();
             editForm.Text = "Edit Customer";
             editForm.Size = new Size(350, 150);
@@ -706,7 +865,6 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
                 using (var context = new AppDbContext())
                 {
-                    // Check for duplicate name
                     bool nameExists = context.Customers.Any(c => c.Id != selectedCustomer.Id &&
                         c.Name.ToLower() == newName.ToLower());
 
@@ -719,11 +877,9 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
                     try
                     {
-                        // Update customer name
                         selectedCustomer.Name = newName;
                         context.Customers.Update(selectedCustomer);
 
-                        // Update DebtItems tags
                         var oldNameTag = $"[{selectedCustomer.Name.ToLower()}]";
                         var newNameTag = $"[{newName.ToLower()}]";
 
@@ -753,10 +909,8 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
         private void btnTabSearch_Click(object sender, EventArgs e)
         {
-            // Get the search term from the textbox
             string searchTerm = txtTabSearchName.Text.Trim();
 
-            // Check if search term is empty
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
                 MessageBox.Show("Please enter a customer name to search.", "Search Required",
@@ -766,13 +920,11 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
 
             using (var context = new AppDbContext())
             {
-                // Search for customers whose name contains the search term (case-insensitive)
                 var searchResults = context.Customers
                     .Where(c => c.Name != null && c.Name.ToLower().Contains(searchTerm.ToLower()))
                     .OrderBy(c => c.Name)
                     .ToList();
 
-                // Check if any results found
                 if (searchResults.Count == 0)
                 {
                     MessageBox.Show($"No customers found matching '{searchTerm}'.", "No Results",
@@ -780,11 +932,9 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                     return;
                 }
 
-                // Display search results in the DataGridView
                 dgvTabLedger.DataSource = null;
                 dgvTabLedger.AutoGenerateColumns = false;
 
-                // Set column mappings
                 if (dgvTabLedger.Columns.Contains("colTabName"))
                     dgvTabLedger.Columns["colTabName"].DataPropertyName = "Name";
 
@@ -800,5 +950,283 @@ namespace I_and_J_Store_Inventory__Business_And_Tab_Ledger
                 dgvTabLedger.DataSource = searchResults;
             }
         }
+
+        #endregion
+
+        #region HOME SECTION (Business Contacts)
+
+        private void SetupHomeGridColumns()
+        {
+            dataGridViewHome.SuspendLayout();
+            try
+            {
+                dataGridViewHome.AutoGenerateColumns = false;
+                dataGridViewHome.Columns.Clear();
+                dataGridViewHome.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dataGridViewHome.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+                dataGridViewHome.RowHeadersVisible = true;
+
+                dataGridViewHome.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "colContactName",
+                    HeaderText = "Contact Name",
+                    DataPropertyName = "ContactName",
+                    FillWeight = 35
+                });
+
+                dataGridViewHome.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "colContactNumber",
+                    HeaderText = "Contact Number",
+                    DataPropertyName = "ContactNumber",
+                    FillWeight = 25
+                });
+
+                dataGridViewHome.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "colBusinessStatus",
+                    HeaderText = "Business Status",
+                    DataPropertyName = "BusinessStatus",
+                    FillWeight = 20
+                });
+
+                dataGridViewHome.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "colDateCreated",
+                    HeaderText = "Date Created",
+                    DataPropertyName = "DateCreated",
+                    FillWeight = 20,
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = "yyyy-MM-dd HH:mm" }
+                });
+            }
+            finally
+            {
+                dataGridViewHome.ResumeLayout();
+            }
+        }
+
+        private void LoadHomeData()
+        {
+            try
+            {
+                var data = _businessContactService.GetAllContacts();
+                dataGridViewHome.DataSource = null;
+                dataGridViewHome.DataSource = data;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading contacts: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ClearHomeFields()
+        {
+            textBoxBusinessConhome.Clear();
+            textBoxhomeConNum.Clear();
+            comboxBusinesSatushome.SelectedIndex = -1;
+        }
+
+        private void ExitEditMode()
+        {
+            isEditMode = false;
+            editingContactId = 0;
+            buttonEditHome.Text = "Edit Contact";
+            buttonEditHome.BackColor = Color.Empty;
+            buttonHomeSave.Enabled = true;
+            ClearHomeFields();
+        }
+
+        private void buttonHomeSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (isEditMode)
+                {
+                    ExitEditMode();
+                }
+
+                if (string.IsNullOrWhiteSpace(textBoxBusinessConhome.Text))
+                {
+                    MessageBox.Show("Please enter a contact name.", "Input Required",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(textBoxhomeConNum.Text))
+                {
+                    MessageBox.Show("Please enter a contact number.", "Input Required",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string businessStatus = comboxBusinesSatushome.SelectedItem?.ToString() ?? "Active";
+
+                var newContact = new BusinessContact
+                {
+                    ContactName = textBoxBusinessConhome.Text.Trim(),
+                    ContactNumber = textBoxhomeConNum.Text.Trim(),
+                    BusinessStatus = businessStatus,
+                    DateCreated = DateTime.Now
+                };
+
+                _businessContactService.AddContact(newContact);
+                MessageBox.Show("Contact saved successfully!", "Success",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                LoadHomeData();
+                ClearHomeFields();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving contact: {ex.InnerException?.Message ?? ex.Message}",
+                    "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void buttonEditHome_Click(object sender, EventArgs e)
+        {
+            if (isEditMode)
+            {
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(textBoxBusinessConhome.Text))
+                    {
+                        MessageBox.Show("Please enter a contact name.", "Input Required",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(textBoxhomeConNum.Text))
+                    {
+                        MessageBox.Show("Please enter a contact number.", "Input Required",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    string businessStatus = comboxBusinesSatushome.SelectedItem?.ToString() ?? "Active";
+
+                    var contact = _businessContactService.GetContactById(editingContactId);
+                    if (contact != null)
+                    {
+                        contact.ContactName = textBoxBusinessConhome.Text.Trim();
+                        contact.ContactNumber = textBoxhomeConNum.Text.Trim();
+                        contact.BusinessStatus = businessStatus;
+                        _businessContactService.UpdateContact(contact);
+
+                        MessageBox.Show("Contact updated successfully!", "Success",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    ExitEditMode();
+                    LoadHomeData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error updating contact: {ex.InnerException?.Message ?? ex.Message}",
+                        "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                if (dataGridViewHome.CurrentRow == null || !(dataGridViewHome.CurrentRow.DataBoundItem is BusinessContact selectedContact))
+                {
+                    MessageBox.Show("Please select a contact to edit.", "Selection Required",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                textBoxBusinessConhome.Text = selectedContact.ContactName;
+                textBoxhomeConNum.Text = selectedContact.ContactNumber;
+                editingContactId = selectedContact.Id;
+                isEditMode = true;
+
+                for (int i = 0; i < comboxBusinesSatushome.Items.Count; i++)
+                {
+                    if (comboxBusinesSatushome.Items[i].ToString() == selectedContact.BusinessStatus)
+                    {
+                        comboxBusinesSatushome.SelectedIndex = i;
+                        break;
+                    }
+                }
+
+                buttonEditHome.Text = "Save Changes";
+                buttonEditHome.BackColor = Color.Green;
+                buttonHomeSave.Enabled = false;
+
+                MessageBox.Show($"Editing '{selectedContact.ContactName}'. Make your changes and click 'Save Changes'.",
+                    "Edit Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void buttonhomedelete_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewHome.CurrentRow?.DataBoundItem is BusinessContact selectedContact)
+            {
+                if (isEditMode && editingContactId == selectedContact.Id)
+                {
+                    ExitEditMode();
+                }
+
+                DialogResult confirm = MessageBox.Show(
+                    $"Are you sure you want to delete '{selectedContact.ContactName}'?",
+                    "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (confirm == DialogResult.Yes)
+                {
+                    _businessContactService.DeleteContact(selectedContact.Id);
+                    LoadHomeData();
+                    ClearHomeFields();
+                    MessageBox.Show("Contact deleted successfully!", "Deleted",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a contact to delete.", "Selection Required",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void dataGridViewHome_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!isEditMode && e.RowIndex >= 0 && dataGridViewHome.Rows[e.RowIndex].DataBoundItem is BusinessContact selectedContact)
+            {
+                textBoxBusinessConhome.Text = selectedContact.ContactName;
+                textBoxhomeConNum.Text = selectedContact.ContactNumber;
+
+                for (int i = 0; i < comboxBusinesSatushome.Items.Count; i++)
+                {
+                    if (comboxBusinesSatushome.Items[i].ToString() == selectedContact.BusinessStatus)
+                    {
+                        comboxBusinesSatushome.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void btnHomeSearch_Click(object sender, EventArgs e)
+        {
+            string searchTerm = txtHomeSearch.Text?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                LoadHomeData();
+                return;
+            }
+
+            var searchResults = _businessContactService.SearchContacts(searchTerm);
+            dataGridViewHome.DataSource = null;
+            dataGridViewHome.DataSource = searchResults;
+
+            if (searchResults.Count == 0)
+            {
+                MessageBox.Show($"No contacts found matching '{searchTerm}'.", "No Results",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        #endregion
     }
 }

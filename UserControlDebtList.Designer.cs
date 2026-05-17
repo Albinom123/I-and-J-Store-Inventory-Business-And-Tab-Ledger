@@ -36,7 +36,6 @@
             labelTL = new Label();
             panel16 = new Panel();
             buttonReturn = new Button();
-            buttonSave = new Button();
             materialCard3 = new MaterialSkin.Controls.MaterialCard();
             btnPaydebt = new Button();
             label1 = new Label();
@@ -48,7 +47,6 @@
             label9 = new Label();
             txtDlItemName = new TextBox();
             btnDlAddItem = new Button();
-            btnDlEditDebt = new Button();
             btnDlDeleteDebt = new Button();
             dgvDebtList = new DataGridView();
             colDlDate = new DataGridViewTextBoxColumn();
@@ -111,9 +109,10 @@
             // lblDlCustomerName
             // 
             lblDlCustomerName.AutoSize = true;
+            lblDlCustomerName.Font = new Font("Palatino Linotype", 13.2000008F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblDlCustomerName.Location = new Point(38, 24);
             lblDlCustomerName.Name = "lblDlCustomerName";
-            lblDlCustomerName.Size = new Size(119, 20);
+            lblDlCustomerName.Size = new Size(194, 31);
             lblDlCustomerName.TabIndex = 15;
             lblDlCustomerName.Text = "Customer Name:";
             // 
@@ -134,9 +133,7 @@
             panel16.BackColor = SystemColors.ControlLightLight;
             panel16.BorderStyle = BorderStyle.Fixed3D;
             panel16.Controls.Add(buttonReturn);
-            panel16.Controls.Add(buttonSave);
             panel16.Controls.Add(materialCard3);
-            panel16.Controls.Add(btnDlEditDebt);
             panel16.Controls.Add(btnDlDeleteDebt);
             panel16.Dock = DockStyle.Left;
             panel16.Location = new Point(82, 121);
@@ -153,15 +150,6 @@
             buttonReturn.Text = "Return";
             buttonReturn.UseVisualStyleBackColor = true;
             buttonReturn.Click += buttonReturn_Click;
-            // 
-            // buttonSave
-            // 
-            buttonSave.Location = new Point(17, 575);
-            buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(208, 29);
-            buttonSave.TabIndex = 6;
-            buttonSave.Text = "Save";
-            buttonSave.UseVisualStyleBackColor = true;
             // 
             // materialCard3
             // 
@@ -273,18 +261,9 @@
             btnDlAddItem.UseVisualStyleBackColor = true;
             btnDlAddItem.Click += btnDlAddItem_Click;
             // 
-            // btnDlEditDebt
-            // 
-            btnDlEditDebt.Location = new Point(17, 519);
-            btnDlEditDebt.Name = "btnDlEditDebt";
-            btnDlEditDebt.Size = new Size(208, 29);
-            btnDlEditDebt.TabIndex = 4;
-            btnDlEditDebt.Text = "Edit Costumer Debt";
-            btnDlEditDebt.UseVisualStyleBackColor = true;
-            // 
             // btnDlDeleteDebt
             // 
-            btnDlDeleteDebt.Location = new Point(17, 484);
+            btnDlDeleteDebt.Location = new Point(19, 437);
             btnDlDeleteDebt.Name = "btnDlDeleteDebt";
             btnDlDeleteDebt.Size = new Size(208, 29);
             btnDlDeleteDebt.TabIndex = 3;
@@ -374,11 +353,9 @@
         private Panel panel16;
         private MaterialSkin.Controls.MaterialCard materialCard3;
         private Button btnDlAddItem;
-        private Button btnDlEditDebt;
         private Button btnDlDeleteDebt;
         private DataGridView dgvDebtList;
         private Button buttonReturn;
-        private Button buttonSave;
         private Label label7;
         private ComboBox cmbDlCategory;
         private Label label8;
